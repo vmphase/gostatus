@@ -1,0 +1,16 @@
+NOTICE
+======
+
+This project (gostatus) may contain fragments of code that were
+inspired by — in terms of structure or functionality, not source code — the
+following third-party open source projects. No code was copied or derived from
+these projects; inspiration was drawn solely from their design, architecture,
+and feature set.
+
+-------------------------------------------------------------------------------
+statusbadges
+https://github.com/advaith1/statusbadges
+-------------------------------------------------------------------------------
+
+This NOTICE file is provided for informational purposes only and does not
+modify the terms of the license under which this project is distributed.
