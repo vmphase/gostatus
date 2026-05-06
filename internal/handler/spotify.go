@@ -24,7 +24,14 @@ func (h *Handler) Spotify(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	fmt.Fprint(w, badge.Make(
+	make := badge.Make
+	if qp(r, "hideLogo", "false") != "true" {
+		make = func(label, msg, lc, c string) string {
+			return badge.MakeWithLogo(label, msg, lc, c, "spotify")
+		}
+	}
+
+	fmt.Fprint(w, make(
 		qp(r, "label", "listening to"),
 		message,
 		qp(r, "labelColor", "#555"),
