@@ -23,6 +23,7 @@ func (h *Handler) Register(mux *http.ServeMux) {
 	mux.HandleFunc("/badge/status/", h.Status)
 	mux.HandleFunc("/badge/spotify/", h.Spotify)
 	mux.HandleFunc("/badge/playing/", h.Playing)
+	mux.HandleFunc("/badge/vscode/", h.VSCode)
 	mux.HandleFunc("/presence/", h.Presence)
 }
 
@@ -112,6 +113,39 @@ func (h *Handler) Presence(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 }
+
+
+func (h *Handler) VSCode(w http.ResponseWriter, r *http.Request) {
+	id := strings.TrimPrefix(r.URL.Path, "/badge/vscode/")
+	svgHeaders(w)
+
+	message := qp(r, "fallback", "nothing rn")
+	if p, ok := h.store.Get(id); ok {
+		for _, a := range p.Activities {
+			if a.Name == "Visual Studio Code" && a.Details != "" && a.State != "" {
+				file := strings.TrimPrefix(a.Details, "Editing ")
+				workspace := a.State
+				workspace = strings.ReplaceAll(workspace, "Workspace: ", "")
+				workspace = strings.ReplaceAll(workspace, " (Workspace)", "")
+				if strings.HasPrefix(workspace, "Glitch:") {
+					workspace = strings.Replace(workspace, "Glitch:", "🎏", 1)
+				}
+				message = file + " in " + workspace
+				break
+			}
+		}
+	}
+
+	svg := badge.Make(
+		qp(r, "label", "vscode"),
+		message,
+		qp(r, "labelColor", "#555"),
+		qp(r, "color", qp(r, "color", "#23a7f2")),
+	)
+
+	fmt.Fprint(w, svg)
+}
+
 
 func svgHeaders(w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "image/svg+xml; charset=utf-8")
