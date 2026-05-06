@@ -14,17 +14,15 @@ Discord presence badges as SVGs to show discord status, spotify-, vscode- or gam
 ```bash
 git clone https://github.com/vmphase/gostatus
 cd gostatus
+
 go mod tidy
-
-# Linux
-DISCORD_TOKEN=your_token_here go run main.go
-
-# Windows
-$env:DISCORD_TOKEN="your_token_here"; go run main.go
+go run main.go
 ``` 
 
-The server starts on port `8080` by default. Set `PORT` environmental variable to override.
-
+Configuration is done via `config.[example].toml`:
+- rename `config.toml.example` to `config.toml`
+- set `token` to your bot token
+- optionally change the `port` field
 
 ## Endpoints
 

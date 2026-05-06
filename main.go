@@ -3,19 +3,33 @@ package main
 import (
 	"log"
 	"net/http"
-	"os"
 
 	"gostatus/internal/gateway"
 	"gostatus/internal/handler"
 	"gostatus/internal/store"
+
+	"github.com/BurntSushi/toml"
 )
 
+type Config struct {
+	Token string
+	Port  string
+}
+
 func main() {
-	token := os.Getenv("DISCORD_TOKEN")
-	if token == "" {
-		log.Fatal("DISCORD_TOKEN env var is required")
+	var conf Config
+
+	_, err := toml.DecodeFile("config.toml", &conf)
+	if err != nil {
+		log.Fatal(err)
 	}
-	port := os.Getenv("PORT")
+
+	token := conf.Token
+	if token == "" || token == "YOUR_TOKEN" {
+		log.Fatal("Bot token is required in config.toml")
+	}
+
+	port := conf.Port
 	if port == "" {
 		port = "8080"
 	}

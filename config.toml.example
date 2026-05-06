@@ -1,0 +1,3 @@
+# Discord bot token from https://discord.com/developers/home
+token = "YOUR_TOKEN"
+port = "8080"
