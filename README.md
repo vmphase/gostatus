@@ -1,7 +1,6 @@
 # gostatus 
 
-[WIP] Discord presence badges as SVGs to show status, Spotify or game activity using [shields.io](https://shields.io/).   
-*Inspired by [statusbadges](https://github.com/advaith1/statusbadges), rewritten in Go.*
+Discord presence badges as SVGs to show status, spotify, vscode or game activity using [shields.io](https://shields.io/). Originally inspired by [statusbadges](https://github.com/advaith1/statusbadges), rewritten in Go.
 
 ## Running
 
@@ -28,8 +27,8 @@ The server starts on port `8080` by default. Set `PORT` environmental variable t
 ## Endpoints
 
 ### `GET /badge/status/{discord_user_id}`
-Returns a badge with the user's current Discord status.
 
+Returns a badge with the user's current Discord status.
 | Query        | Default      | Description |
 | -----        | -------      | ----------- |
 | `label`      | `currently`  | Left side text |
@@ -40,20 +39,21 @@ Returns a badge with the user's current Discord status.
 ---
 
 ### `GET /badge/spotify/{discord_user_id}`
-Returns a badge with the track the user is currently listening to on Spotify.
 
+Returns a badge with the track the user is currently listening to on Spotify.
 | Query        | Default        | Description |
 | -----        | -------        | ----------- |
 | `label`      | `listening to` | Left side text |
 | `color`      | `#1db954`      | Right side background color |
 | `labelColor` | `#555`         | Left side background color |
 | `fallback`   | `nothing`      | Text shown when not listening |
+| `hideLogo`   | `false`        | Set to `true` to hide the Spotify logo |
 
 ---
 
 ### `GET /badge/playing/{discord_user_id}`
-Returns a badge with the game the user is currently playing.
 
+Returns a badge with the game the user is currently playing.
 | Query        | Default      | Description |
 | ------       | -------      | ----------- |
 | `label`      | `playing`    | Left side text |
@@ -63,5 +63,19 @@ Returns a badge with the game the user is currently playing.
 
 ---
 
+### `GET /badge/vscode/{discord_user_id}`
+
+Returns a badge with the file and workspace the user is currently editing in [Visual Studio Code](https://code.visualstudio.com/).
+| Query        | Default      | Description |
+| ------       | -------      | ----------- |
+| `label`      | `vscode`     | Left side text |
+| `color`      | `#23a7f2`    | Right side background color |
+| `labelColor` | `#555`       | Left side background color |
+| `fallback`   | `nothing`    | Text shown when not coding |
+| `hideLogo`   | `false`      | Set to `true` to hide the VSCode logo |
+
+---
+
 ### `GET /presence/{discord_user_id}`
 Returns raw presence data as JSON. CORS-enabled.
+ 

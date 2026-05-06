@@ -12,7 +12,7 @@ func (h *Handler) VSCode(w http.ResponseWriter, r *http.Request) {
 	id := strings.TrimPrefix(r.URL.Path, "/badge/vscode/")
 	svgHeaders(w)
 
-	message := qp(r, "fallback", "nothing rn")
+	message := qp(r, "fallback", "nothing")
 	if p, ok := h.store.Get(id); ok {
 		for _, a := range p.Activities {
 			if a.Name == "Visual Studio Code" && a.Details != "" && a.State != "" {
