@@ -1,6 +1,6 @@
 # gostatus 
 
-Discord presence badges as SVGs to show discord status, spotify-, vscode- or game-activity using [shields.io](https://shields.io/).   
+Discord presence badges as SVGs to show discord status, spotify-, vscode-, zed- or game-activity using [shields.io](https://shields.io/).   
 > [!NOTE]
 > Originally inspired by [statusbadges](https://github.com/advaith1/statusbadges), rewritten in Go with improvments.
 
@@ -73,6 +73,19 @@ Returns a badge with the file and workspace the user is currently editing in [Vi
 | `labelColor` | `#555`       | Left side background color |
 | `fallback`   | `nothing`    | Text shown when not coding |
 | `hideLogo`   | `false`      | Set to `true` to hide the VSCode logo |
+
+---
+
+### `GET /badge/zed/{discord_user_id}`
+
+Returns a badge with the file and workspace the user is currently editing in [Zed](https://zed.dev/).
+| Query        | Default      | Description |
+| ------       | -------      | ----------- |
+| `label`      | `zed`        | Left side text |
+| `color`      | `#a277ff`    | Right side background color |
+| `labelColor` | `#2b213a`    | Left side background color |
+| `fallback`   | `nothing`    | Text shown when not coding |
+| `hideLogo`   | `false`      | Set to `true` to hide the Zed logo |
 
 ---
 

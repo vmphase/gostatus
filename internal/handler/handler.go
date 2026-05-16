@@ -19,6 +19,7 @@ func (h *Handler) Register(mux *http.ServeMux) {
 	mux.HandleFunc("/badge/spotify/", h.Spotify)
 	mux.HandleFunc("/badge/playing/", h.Playing)
 	mux.HandleFunc("/badge/vscode/", h.VSCode)
+	mux.HandleFunc("/badge/zed/", h.Zed)
 	mux.HandleFunc("/presence/", h.Presence)
 }
 
