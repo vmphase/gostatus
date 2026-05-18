@@ -18,7 +18,7 @@ func (h *Handler) Playing(w http.ResponseWriter, r *http.Request) {
 		for _, a := range p.Activities {
 			if a.Type == gateway.ActivityTypePlaying &&
 				a.Name != "Visual Studio Code" &&
-				a.Name != "IntelliJ IDEA Ultimate" {
+				a.Name != "Zed" {
 				games = append(games, a.Name)
 			}
 		}

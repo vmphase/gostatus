@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"gostatus/internal/badge"
+	"gostatus/internal/gateway"
 )
 
 func (h *Handler) VSCode(w http.ResponseWriter, r *http.Request) {
@@ -15,7 +16,7 @@ func (h *Handler) VSCode(w http.ResponseWriter, r *http.Request) {
 	message := qp(r, "fallback", "nothing")
 	if p, ok := h.store.Get(id); ok {
 		for _, a := range p.Activities {
-			if a.Name == "Visual Studio Code" && a.Details != "" && a.State != "" {
+			if a.Type == gateway.ActivityTypePlaying && a.Name == "Visual Studio Code" && a.Details != "" {
 				file := strings.TrimPrefix(a.Details, "Editing ")
 				workspace := strings.ReplaceAll(a.State, "Workspace: ", "")
 				workspace = strings.ReplaceAll(workspace, " (Workspace)", "")

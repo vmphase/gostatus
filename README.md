@@ -51,6 +51,19 @@ Returns a badge with the track the user is currently listening to on Spotify.
 
 ---
 
+### `GET /badge/crunchyroll/{discord_user_id}`
+
+Returns a badge with the information the user is currently watching on Crunchyroll.
+| Query        | Default        | Description |
+| -----        | -------        | ----------- |
+| `label`      | `watching`     | Left side text |
+| `color`      | `#5865f2`      | Right side background color |
+| `labelColor` | `#555`         | Left side background color |
+| `fallback`   | `nothing`      | Text shown when not listening |
+| `hideLogo`   | `false`        | Set to `true` to hide the Crunchyroll logo |
+
+---
+
 ### `GET /badge/playing/{discord_user_id}`
 
 Returns a badge with the game the user is currently playing.

@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"gostatus/internal/badge"
+	"gostatus/internal/gateway"
 )
 
 func (h *Handler) Zed(w http.ResponseWriter, r *http.Request) {
@@ -15,7 +16,7 @@ func (h *Handler) Zed(w http.ResponseWriter, r *http.Request) {
 	message := qp(r, "fallback", "nothing")
 	if p, ok := h.store.Get(id); ok {
 		for _, a := range p.Activities {
-			if a.Name == "Zed" && a.Details != "" && a.State != "" {
+			if a.Type == gateway.ActivityTypePlaying && a.Name == "Zed" && a.Details != "" {
 				file := strings.TrimPrefix(a.State, "Working on ")
 				workspace := strings.TrimPrefix(a.Details, "In ")
 				message = file + " in " + workspace
