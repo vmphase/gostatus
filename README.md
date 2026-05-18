@@ -53,7 +53,7 @@ Returns a badge with the track the user is currently listening to on Spotify.
 
 ### `GET /badge/crunchyroll/{discord_user_id}`
 
-Returns a badge with the information the user is currently watching on Crunchyroll.
+Returns a badge with the information the user is currently watching on [Crunchyroll](https://www.crunchyroll.com/).
 | Query        | Default        | Description |
 | -----        | -------        | ----------- |
 | `label`      | `watching`     | Left side text |

@@ -1,8 +1,11 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
+	"strings"
 
+	"gostatus/internal/badge"
 	"gostatus/internal/store"
 )
 
@@ -22,6 +25,20 @@ func (h *Handler) Register(mux *http.ServeMux) {
 	mux.HandleFunc("/badge/vscode/", h.VSCode)
 	mux.HandleFunc("/badge/zed/", h.Zed)
 	mux.HandleFunc("/presence/", h.Presence)
+}
+
+func (h *Handler) id(r *http.Request, prefix string) string {
+	return strings.TrimPrefix(r.URL.Path, prefix)
+}
+
+func (h *Handler) renderBadge(w http.ResponseWriter, r *http.Request, label, message, labelColor, color, logo string) {
+	var svg string
+	if logo != "" && qp(r, "hideLogo", "false") != "true" {
+		svg = badge.MakeWithLogo(label, message, labelColor, color, logo)
+	} else {
+		svg = badge.Make(label, message, labelColor, color)
+	}
+	fmt.Fprint(w, svg)
 }
 
 func svgHeaders(w http.ResponseWriter) {
