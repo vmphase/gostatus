@@ -1,107 +1,93 @@
-# gostatus 
+# gostatus
+Discord presence badges as SVGs to show discord status, music-, editor- or game-activity using [shields.io](https://shields.io/).
 
-Discord presence badges as SVGs to show discord status, spotify-, vscode-, zed- or game-activity using [shields.io](https://shields.io/).   
 > [!NOTE]
-> Originally inspired by [statusbadges](https://github.com/advaith1/statusbadges), rewritten in Go with improvments.
+> Originally inspired by [statusbadges](https://github.com/advaith1/statusbadges), rewritten in Go with improvements.
 
 ## Running
 
-### Requirements:
+### Requirements
 - [Go 1.21+](https://go.dev/)
-- **Server Members** and **Presence** intents need to be enabled at [Dev Portal](https://discord.com/developers/home)
+- **Server Members** and **Presence** intents enabled at the [Dev Portal](https://discord.com/developers/home)
 - Bot must be in a shared server with the users you want to track
 
 ```bash
 git clone https://github.com/vmphase/gostatus
 cd gostatus
-
 go mod tidy
 go run main.go
-``` 
+```
 
-Configuration is done via `config.[example].toml`:
-- rename `config.toml.example` to `config.toml`
+Configuration is done via `config.toml.example`:
+- rename it to `config.toml`
 - set `token` to your bot token
 - optionally change the `port` field
 
 ## Endpoints
 
 ### `GET /badge/status/{discord_user_id}`
+Current Discord presence status.
 
-Returns a badge with the user's current Discord status.
 | Query        | Default      | Description |
-| -----        | -------      | ----------- |
+| ------------ | ------------ | ----------- |
 | `label`      | `currently`  | Left side text |
 | `color`      | status-based | Right side background color |
 | `labelColor` | `#555`       | Left side background color |
-| `simple`     | —            | Set to `true` to collapse `idle`/`dnd` => `online` |
+| `simple`     | —            | Set to `true` to collapse `idle`/`dnd` → `online` |
 
 ---
 
-### `GET /badge/spotify/{discord_user_id}`
+### `GET /badge/music/{discord_user_id}`
+Track the user is currently listening to. Auto-detects supported music services (currently Spotify).
 
-Returns a badge with the track the user is currently listening to on Spotify.
 | Query        | Default        | Description |
-| -----        | -------        | ----------- |
+| ------------ | -------------- | ----------- |
 | `label`      | `listening to` | Left side text |
-| `color`      | `#1db954`      | Right side background color |
+| `color`      | service-based  | Right side background color |
 | `labelColor` | `#555`         | Left side background color |
 | `fallback`   | `nothing`      | Text shown when not listening |
-| `hideLogo`   | `false`        | Set to `true` to hide the Spotify logo |
+| `hideLogo`   | `false`        | Set to `true` to hide the service logo |
 
 ---
 
-### `GET /badge/crunchyroll/{discord_user_id}`
+### `GET /badge/code/{discord_user_id}`
+File and workspace the user is currently editing. Auto-detects supported editors (VSCode, Zed).
 
-Returns a badge with the information the user is currently watching on [Crunchyroll](https://www.crunchyroll.com/).
-| Query        | Default        | Description |
-| -----        | -------        | ----------- |
-| `label`      | `watching`     | Left side text |
-| `color`      | `#5865f2`      | Right side background color |
-| `labelColor` | `#555`         | Left side background color |
-| `fallback`   | `nothing`      | Text shown when not listening |
-| `hideLogo`   | `false`        | Set to `true` to hide the Crunchyroll logo |
+| Query        | Default       | Description |
+| ------------ | ------------- | ----------- |
+| `label`      | editor-based  | Left side text |
+| `color`      | editor-based  | Right side background color |
+| `labelColor` | `#1e1e2e`    | Left side background color |
+| `fallback`   | `nothing`     | Text shown when not coding |
+| `hideLogo`   | `false`       | Set to `true` to hide the editor logo |
+| `prefer`     | first active  | Preferred editor slug (`vscode`, `zed`) when multiple are active |
 
 ---
 
 ### `GET /badge/playing/{discord_user_id}`
+Game the user is currently playing (editor activities are excluded).
 
-Returns a badge with the game the user is currently playing.
-| Query        | Default      | Description |
-| ------       | -------      | ----------- |
-| `label`      | `playing`    | Left side text |
-| `color`      | `#5865f2`    | Right side background color |
-| `labelColor` | `#555`       | Left side background color |
-| `fallback`   | `nothing`    | Text shown when not playing |
-
----
-
-### `GET /badge/vscode/{discord_user_id}`
-
-Returns a badge with the file and workspace the user is currently editing in [Visual Studio Code](https://code.visualstudio.com/).
-| Query        | Default      | Description |
-| ------       | -------      | ----------- |
-| `label`      | `vscode`     | Left side text |
-| `color`      | `#23a7f2`    | Right side background color |
-| `labelColor` | `#555`       | Left side background color |
-| `fallback`   | `nothing`    | Text shown when not coding |
-| `hideLogo`   | `false`      | Set to `true` to hide the VSCode logo |
+| Query        | Default    | Description |
+| ------------ | ---------- | ----------- |
+| `label`      | `playing`  | Left side text |
+| `color`      | `#5865f2`  | Right side background color |
+| `labelColor` | `#555`     | Left side background color |
+| `fallback`   | `nothing`  | Text shown when not playing |
 
 ---
 
-### `GET /badge/zed/{discord_user_id}`
+### `GET /badge/crunchyroll/{discord_user_id}`
+Episode and series the user is currently watching on [Crunchyroll](https://www.crunchyroll.com/).
 
-Returns a badge with the file and workspace the user is currently editing in [Zed](https://zed.dev/).
-| Query        | Default      | Description |
-| ------       | -------      | ----------- |
-| `label`      | `zed`        | Left side text |
-| `color`      | `#a277ff`    | Right side background color |
-| `labelColor` | `#2b213a`    | Left side background color |
-| `fallback`   | `nothing`    | Text shown when not coding |
-| `hideLogo`   | `false`      | Set to `true` to hide the Zed logo |
+| Query        | Default    | Description |
+| ------------ | ---------- | ----------- |
+| `label`      | `watching` | Left side text |
+| `color`      | `#5865f2`  | Right side background color |
+| `labelColor` | `#555`     | Left side background color |
+| `fallback`   | `nothing`  | Text shown when not watching |
+| `hideLogo`   | `false`    | Set to `true` to hide the Crunchyroll logo |
 
 ---
 
 ### `GET /presence/{discord_user_id}`
-Returns raw presence data as JSON. CORS-enabled.
- 
+Raw presence data as JSON. CORS-enabled.
