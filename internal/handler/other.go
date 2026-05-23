@@ -1,7 +1,6 @@
 package handler
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
@@ -10,27 +9,8 @@ import (
 	"gostatus/internal/gateway"
 )
 
-// Full cached Discord presence payload for a user.
-// Fallbacks to an offline/empty presence response if not found.
-func (h *Handler) Presence(w http.ResponseWriter, r *http.Request) {
-	id := strings.TrimPrefix(r.URL.Path, "/presence/")
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-
-	if p, ok := h.store.Get(id); ok {
-		json.NewEncoder(w).Encode(p)
-	} else {
-		json.NewEncoder(w).Encode(map[string]any{
-			"status":        "offline",
-			"client_status": map[string]any{},
-			"activities":    []any{},
-		})
-	}
-}
-
-// Current Discord presence status (online, idle, dnd, offline).
-// Accepts ?simple=true to collapse idle and dnd into "online".
+// Current Discord presence status (online, idle, dnd, offline)
+// Accepts ?simple=true to collapse idle and dnd into "online"
 func (h *Handler) Status(w http.ResponseWriter, r *http.Request) {
 	svgHeaders(w)
 
