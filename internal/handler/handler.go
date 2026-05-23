@@ -19,11 +19,10 @@ func New(s *store.Store) *Handler {
 
 func (h *Handler) Register(mux *http.ServeMux) {
 	mux.HandleFunc("/badge/status/", h.Status)
-	mux.HandleFunc("/badge/spotify/", h.Spotify)
-	mux.HandleFunc("/badge/crunchyroll/", h.CrunchyRoll)
 	mux.HandleFunc("/badge/playing/", h.Playing)
-	mux.HandleFunc("/badge/vscode/", h.VSCode)
-	mux.HandleFunc("/badge/zed/", h.Zed)
+	mux.HandleFunc("/badge/crunchyroll/", h.CrunchyRoll)
+	mux.HandleFunc("/badge/code/", h.Code)
+	mux.HandleFunc("/badge/music/", h.Music)
 	mux.HandleFunc("/presence/", h.Presence)
 }
 
