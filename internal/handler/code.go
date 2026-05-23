@@ -84,7 +84,14 @@ func (h *Handler) Code(w http.ResponseWriter, r *http.Request) {
 	p, ok := h.store.Get(h.id(r, "/badge/code/"))
 	if !ok {
 		def := defaultEditor()
-		h.renderBadge(w, r, qp(r, "label", def.label), fallback, qp(r, "labelColor", "#1e1e2e"), qp(r, "color", def.color), def.logo)
+		h.renderBadge(
+			w, r,
+			qp(r, "label", def.label),
+			fallback,
+			qp(r, "labelColor", "#1e1e2e"),
+			qp(r, "color", def.color),
+			def.logo,
+		)
 		return
 	}
 
@@ -108,7 +115,14 @@ func (h *Handler) Code(w http.ResponseWriter, r *http.Request) {
 
 	if len(matches) == 0 {
 		def := defaultEditor()
-		h.renderBadge(w, r, qp(r, "label", def.label), fallback, qp(r, "labelColor", "#1e1e2e"), qp(r, "color", def.color), def.logo)
+		h.renderBadge(
+			w, r,
+			qp(r, "label", def.label),
+			fallback,
+			qp(r, "labelColor", "#1e1e2e"),
+			qp(r, "color", def.color),
+			def.logo,
+		)
 		return
 	}
 
@@ -122,5 +136,12 @@ func (h *Handler) Code(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	h.renderBadge(w, r, qp(r, "label", chosen.ed.label), chosen.msg, qp(r, "labelColor", "#1e1e2e"), qp(r, "color", chosen.ed.color), chosen.ed.logo)
+	h.renderBadge(
+		w, r,
+		qp(r, "label", chosen.ed.label),
+		chosen.msg,
+		qp(r, "labelColor", "#1e1e2e"),
+		qp(r, "color", chosen.ed.color),
+		chosen.ed.logo,
+	)
 }

@@ -7,11 +7,13 @@ import (
 	"gostatus/internal/gateway"
 )
 
-// single music-service activity.
+// single music-service activity
 type musicProvider struct {
 	// discord activity name to match against
 	name string
-	// right-hand side color.
+	// left-hand side text
+	label string
+	// right-hand side color
 	color string
 	// shields.io logo slug
 	logo string
@@ -20,10 +22,11 @@ type musicProvider struct {
 	message func(a *gateway.Activity) string
 }
 
-// ordered registry of supported music services.
+// ordered registry of supported music services
 var musicProviders = []musicProvider{
 	{
 		name:  "Spotify",
+		label: "listening to",
 		color: "#1db954",
 		logo:  "spotify",
 		message: func(a *gateway.Activity) string {
@@ -39,10 +42,18 @@ func (h *Handler) Music(w http.ResponseWriter, r *http.Request) {
 	svgHeaders(w)
 
 	fallback := qp(r, "fallback", "nothing")
+	def := musicProviders[0]
 
 	p, ok := h.store.Get(h.id(r, "/badge/music/"))
 	if !ok {
-		h.renderBadge(w, r, "listening to", fallback, "#555", "#1db954", "")
+		h.renderBadge(
+			w, r,
+			qp(r, "label", def.label),
+			fallback,
+			qp(r, "labelColor", "#555"),
+			qp(r, "color", def.color),
+			def.logo,
+		)
 		return
 	}
 
@@ -55,17 +66,23 @@ func (h *Handler) Music(w http.ResponseWriter, r *http.Request) {
 		if msg == "" {
 			continue
 		}
-
-		label := qp(r, "label", "listening to")
-		color := qp(r, "color", provider.color)
-		labelColor := qp(r, "labelColor", "#555")
-		h.renderBadge(w, r, label, msg, labelColor, color, provider.logo)
+		h.renderBadge(
+			w, r,
+			qp(r, "label", provider.label),
+			msg,
+			qp(r, "labelColor", "#555"),
+			qp(r, "color", provider.color),
+			provider.logo,
+		)
 		return
 	}
 
-	h.renderBadge(w, r,
-		qp(r, "label", "listening to"), fallback,
-		qp(r, "labelColor", "#555"), qp(r, "color", "#1db954"),
-		"",
+	h.renderBadge(
+		w, r,
+		qp(r, "label", def.label),
+		fallback,
+		qp(r, "labelColor", "#555"),
+		qp(r, "color", def.color),
+		def.logo,
 	)
 }
