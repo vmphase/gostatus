@@ -1,11 +1,9 @@
 package handler
 
 import (
-	"fmt"
 	"net/http"
 	"strings"
 
-	"gostatus/internal/badge"
 	"gostatus/internal/gateway"
 )
 
@@ -124,8 +122,5 @@ func (h *Handler) Code(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	label := qp(r, "label", chosen.ed.label)
-	color := qp(r, "color", chosen.ed.color)
-	labelColor := qp(r, "labelColor", "#1e1e2e")
-	fmt.Fprint(w, badge.MakeWithLogo(label, chosen.msg, labelColor, color, chosen.ed.logo))
+	h.renderBadge(w, r, qp(r, "label", chosen.ed.label), chosen.msg, qp(r, "labelColor", "#1e1e2e"), qp(r, "color", chosen.ed.color), chosen.ed.logo)
 }
