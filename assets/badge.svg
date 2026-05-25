@@ -1,3 +1,18 @@
+{{if eq (print .Style) "for-the-badge"}}
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="{{.Total}}" height="28" role="img">
+  <rect width="{{.LW}}" height="28" fill="{{.LabelColor}}"/>
+  <rect x="{{.LW}}" width="{{.MW}}" height="28" fill="{{.Color}}"/>
+  {{- if .LogoB64}}
+  <image x="4" y="7" width="14" height="14" href="data:image/svg+xml;base64,{{.LogoB64}}"/>
+  {{- end}}
+  <g fill="#fff" text-anchor="middle" font-family="DejaVu Sans,Verdana,Geneva,sans-serif" font-size="10" letter-spacing="1" font-weight="bold">
+    <text x="{{.LX1}}" y="19" fill="#010101" fill-opacity=".3">{{.Label}}</text>
+    <text x="{{.LX}}"  y="18">{{.Label}}</text>
+    <text x="{{.MX1}}" y="19" fill="#010101" fill-opacity=".3">{{.Message}}</text>
+    <text x="{{.MX}}"  y="18">{{.Message}}</text>
+  </g>
+</svg>
+{{else}}
 <svg xmlns="http://www.w3.org/2000/svg" width="{{.Total}}" height="20">
   <linearGradient id="s" x2="0" y2="100%">
     <stop offset="0" stop-color="#bbb" stop-opacity=".1"/>
@@ -16,3 +31,4 @@
     <text x="{{.MX}}"  y="14">{{.Message}}</text>
   </g>
 </svg>
+{{end}}

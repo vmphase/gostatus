@@ -30,14 +30,22 @@ func (h *Handler) id(r *http.Request, prefix string) string {
 	return strings.TrimPrefix(r.URL.Path, prefix)
 }
 
-func (h *Handler) renderBadge(w http.ResponseWriter, r *http.Request, label, message, labelColor, color, logo string) {
-	var svg string
-	if logo != "" && qp(r, "hideLogo", "false") != "true" {
-		svg = badge.MakeWithLogo(label, message, labelColor, color, logo)
-	} else {
-		svg = badge.Make(label, message, labelColor, color)
+// builds a badge.Options from the request, merging caller supplied
+// defaults with any query-param overrides the user may have provided
+func (h *Handler) badgeOpts(r *http.Request, label, message, labelColor, color, logo string) badge.Options {
+	hideLogo := r.URL.Query().Get("hideLogo") == "true"
+	return badge.Options{
+		Label:      qp(r, "label", label),
+		Message:    message,
+		LabelColor: qp(r, "labelColor", labelColor),
+		Color:      qp(r, "color", color),
+		Logo:       logoOrEmpty(logo, hideLogo),
+		Style:      badge.ParseStyle(r.URL.Query().Get("style")),
 	}
-	fmt.Fprint(w, svg)
+}
+
+func (h *Handler) renderBadge(w http.ResponseWriter, r *http.Request, label, message, labelColor, color, logo string) {
+	fmt.Fprint(w, badge.Render(h.badgeOpts(r, label, message, labelColor, color, logo)))
 }
 
 func svgHeaders(w http.ResponseWriter) {
@@ -45,9 +53,17 @@ func svgHeaders(w http.ResponseWriter) {
 	w.Header().Set("Cache-Control", "max-age=0, no-cache, no-store, must-revalidate")
 }
 
+// the query param value for key, falling back to fallback
 func qp(r *http.Request, key, fallback string) string {
 	if v := r.URL.Query().Get(key); v != "" {
 		return v
 	}
 	return fallback
+}
+
+func logoOrEmpty(logo string, hide bool) string {
+	if hide {
+		return ""
+	}
+	return logo
 }

@@ -72,17 +72,23 @@ var editors = []editor{
 			if a.Details == "" {
 				return ""
 			}
-
 			file := strings.TrimPrefix(a.Details, "File ")
 			solution := strings.TrimPrefix(a.State, "Solution ")
-
 			if solution == "" {
 				return file
 			}
-
 			return file + " in " + solution
 		},
 	},
+}
+
+func findEditor(prefer string) editor {
+	for _, ed := range editors {
+		if ed.prefer == prefer {
+			return ed
+		}
+	}
+	return editors[0]
 }
 
 func (h *Handler) Code(w http.ResponseWriter, r *http.Request) {
@@ -91,28 +97,19 @@ func (h *Handler) Code(w http.ResponseWriter, r *http.Request) {
 	fallback := qp(r, "fallback", "nothing")
 	prefer := strings.ToLower(r.URL.Query().Get("prefer"))
 
-	defaultEditor := func() editor {
-		if prefer != "" {
-			for _, ed := range editors {
-				if ed.prefer == prefer {
-					return ed
-				}
-			}
-		}
-		return editors[0]
+	renderEditor := func(ed editor, message string) {
+		h.renderBadge(w, r,
+			qp(r, "label", ed.label),
+			message,
+			qp(r, "labelColor", "#1e1e2e"),
+			qp(r, "color", ed.color),
+			ed.logo,
+		)
 	}
 
 	p, ok := h.store.Get(h.id(r, "/badge/code/"))
 	if !ok {
-		def := defaultEditor()
-		h.renderBadge(
-			w, r,
-			qp(r, "label", def.label),
-			fallback,
-			qp(r, "labelColor", "#1e1e2e"),
-			qp(r, "color", def.color),
-			def.logo,
-		)
+		renderEditor(findEditor(prefer), fallback)
 		return
 	}
 
@@ -120,30 +117,20 @@ func (h *Handler) Code(w http.ResponseWriter, r *http.Request) {
 		ed  editor
 		msg string
 	}
-
 	var matches []match
+
 	for _, ed := range editors {
 		a := FindActivity(p, gateway.ActivityTypePlaying, ed.name)
 		if a == nil {
 			continue
 		}
-		msg := ed.message(a)
-		if msg == "" {
-			continue
+		if msg := ed.message(a); msg != "" {
+			matches = append(matches, match{ed, msg})
 		}
-		matches = append(matches, match{ed, msg})
 	}
 
 	if len(matches) == 0 {
-		def := defaultEditor()
-		h.renderBadge(
-			w, r,
-			qp(r, "label", def.label),
-			fallback,
-			qp(r, "labelColor", "#1e1e2e"),
-			qp(r, "color", def.color),
-			def.logo,
-		)
+		renderEditor(findEditor(prefer), fallback)
 		return
 	}
 
@@ -156,13 +143,5 @@ func (h *Handler) Code(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
-
-	h.renderBadge(
-		w, r,
-		qp(r, "label", chosen.ed.label),
-		chosen.msg,
-		qp(r, "labelColor", "#1e1e2e"),
-		qp(r, "color", chosen.ed.color),
-		chosen.ed.logo,
-	)
+	renderEditor(chosen.ed, chosen.msg)
 }

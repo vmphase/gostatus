@@ -13,22 +13,14 @@ import (
 // Accepts ?simple=true to collapse idle and dnd into "online"
 func (h *Handler) Status(w http.ResponseWriter, r *http.Request) {
 	svgHeaders(w)
-
 	status := "offline"
 	if p, ok := h.store.Get(h.id(r, "/badge/status/")); ok {
 		status = p.Status
 	}
-
 	if r.URL.Query().Get("simple") == "true" && (status == "idle" || status == "dnd") {
 		status = "online"
 	}
-
-	fmt.Fprint(w, badge.Make(
-		qp(r, "label", "currently"),
-		status,
-		qp(r, "labelColor", "#555"),
-		qp(r, "color", badge.StatusColors[status]),
-	))
+	h.renderBadge(w, r, "currently", status, "#555", badge.StatusColors[status], "")
 }
 
 // The game user is currently playing, excluding editor activities
