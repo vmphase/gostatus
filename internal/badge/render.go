@@ -9,32 +9,13 @@ import (
 	"text/template"
 )
 
-type Style string
-
 const (
-	StyleFlat        Style = "flat"
-	StyleFlatSquare  Style = "flat-square"
-	StyleForTheBadge Style = "for-the-badge"
+	logoShift = 15
+	flatCharW = 7
+	flatPad   = 10
+	ftbCharW  = 8
+	ftbPad    = 20
 )
-
-func ParseStyle(s string) Style {
-	switch s {
-	case "flat-square":
-		return StyleFlatSquare
-	case "for-the-badge":
-		return StyleForTheBadge
-	default:
-		return StyleFlat
-	}
-}
-
-var tpl = func() *template.Template {
-	b, err := os.ReadFile("assets/badge.svg")
-	if err != nil {
-		panic(err)
-	}
-	return template.Must(template.New("badge").Parse(string(b)))
-}()
 
 type Options struct {
 	Label      string
@@ -54,13 +35,24 @@ type templateParams struct {
 	Style             Style
 }
 
-const (
-	logoShift = 15
-	flatCharW = 7
-	flatPad   = 10
-	ftbCharW  = 8
-	ftbPad    = 20
-)
+var tpl = func() *template.Template {
+	b, err := os.ReadFile("assets/badge.svg")
+	if err != nil {
+		panic(err)
+	}
+	return template.Must(template.New("badge").Parse(string(b)))
+}()
+
+func loadLogo(name string) string {
+	if name == "" {
+		return ""
+	}
+	data, err := os.ReadFile(fmt.Sprintf("assets/logos/%s.svg", name))
+	if err != nil {
+		return ""
+	}
+	return base64.StdEncoding.EncodeToString(data)
+}
 
 func Render(o Options) string {
 	logoB64 := loadLogo(o.Logo)
@@ -98,15 +90,4 @@ func Render(o Options) string {
 		Style:      o.Style,
 	})
 	return buf.String()
-}
-
-func loadLogo(name string) string {
-	if name == "" {
-		return ""
-	}
-	data, err := os.ReadFile(fmt.Sprintf("assets/logos/%s.svg", name))
-	if err != nil {
-		return ""
-	}
-	return base64.StdEncoding.EncodeToString(data)
 }
