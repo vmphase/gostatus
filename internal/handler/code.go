@@ -62,6 +62,27 @@ var editors = []editor{
 			return file + " in " + workspace
 		},
 	},
+	{
+		name:   "Visual Studio",
+		prefer: "visualstudio",
+		label:  "visual studio",
+		color:  "#5c2d91",
+		logo:   "visualstudio",
+		message: func(a *gateway.Activity) string {
+			if a.Details == "" {
+				return ""
+			}
+
+			file := strings.TrimPrefix(a.Details, "File ")
+			solution := strings.TrimPrefix(a.State, "Solution ")
+
+			if solution == "" {
+				return file
+			}
+
+			return file + " in " + solution
+		},
+	},
 }
 
 func (h *Handler) Code(w http.ResponseWriter, r *http.Request) {
