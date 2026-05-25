@@ -8,7 +8,7 @@ import (
 	"text/template"
 )
 
-const logoShift = 20
+const logoShift = 10
 
 var StatusColors = map[string]string{
 	"online":  "#44b700",
