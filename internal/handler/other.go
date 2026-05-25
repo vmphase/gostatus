@@ -20,7 +20,7 @@ func (h *Handler) Status(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Query().Get("simple") == "true" && (status == "idle" || status == "dnd") {
 		status = "online"
 	}
-	h.renderBadge(w, r, "currently", status, "#555", badge.StatusColors[status], "")
+	h.renderBadge(w, r, "currently", status, badge.ColorLabel, badge.StatusColors[status], "")
 }
 
 // The game user is currently playing, excluding editor activities
@@ -48,7 +48,7 @@ func (h *Handler) Playing(w http.ResponseWriter, r *http.Request) {
 
 	h.renderBadge(w, r,
 		qp(r, "label", "playing"), message,
-		qp(r, "labelColor", "#555"), qp(r, "color", "#5865f2"),
+		qp(r, "labelColor", badge.ColorLabel), qp(r, "color", badge.ColorDiscord),
 		"",
 	)
 }
@@ -67,7 +67,7 @@ func (h *Handler) CrunchyRoll(w http.ResponseWriter, r *http.Request) {
 
 	h.renderBadge(w, r,
 		qp(r, "label", "watching"), message,
-		qp(r, "labelColor", "#555"), qp(r, "color", "#5865f2"),
+		qp(r, "labelColor", badge.ColorLabel), qp(r, "color", badge.ColorCrunchyroll),
 		"crunchyroll",
 	)
 }

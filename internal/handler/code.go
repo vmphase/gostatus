@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"gostatus/internal/gateway"
+	"gostatus/internal/badge"
 )
 
 // single code editor activity
@@ -30,7 +31,7 @@ var editors = []editor{
 		name:   "Visual Studio Code",
 		prefer: "vscode",
 		label:  "vscode",
-		color:  "#23a7f2",
+		color:  badge.ColorVSCode,
 		logo:   "vscode",
 		message: func(a *gateway.Activity) string {
 			if a.Details == "" {
@@ -48,7 +49,7 @@ var editors = []editor{
 		name:   "Zed",
 		prefer: "zed",
 		label:  "zed",
-		color:  "#7c6df2",
+		color:  badge.ColorZed,
 		logo:   "zed",
 		message: func(a *gateway.Activity) string {
 			if a.Details == "" {
@@ -66,7 +67,7 @@ var editors = []editor{
 		name:   "Visual Studio",
 		prefer: "visualstudio",
 		label:  "visual studio",
-		color:  "#5c2d91",
+		color:  badge.ColorVisualStudio,
 		logo:   "visualstudio",
 		message: func(a *gateway.Activity) string {
 			if a.Details == "" {
@@ -101,7 +102,7 @@ func (h *Handler) Code(w http.ResponseWriter, r *http.Request) {
 		h.renderBadge(w, r,
 			qp(r, "label", ed.label),
 			message,
-			qp(r, "labelColor", "#1e1e2e"),
+			qp(r, "labelColor", badge.ColorDark),
 			qp(r, "color", ed.color),
 			ed.logo,
 		)

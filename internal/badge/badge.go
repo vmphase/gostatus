@@ -28,13 +28,6 @@ func ParseStyle(s string) Style {
 	}
 }
 
-var StatusColors = map[string]string{
-	"online":  "#44b700",
-	"idle":    "#faa61a",
-	"dnd":     "#f04747",
-	"offline": "#747f8d",
-}
-
 var tpl = func() *template.Template {
 	b, err := os.ReadFile("assets/badge.svg")
 	if err != nil {

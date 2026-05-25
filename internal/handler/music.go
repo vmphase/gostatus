@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"strings"
 
+	"gostatus/internal/badge"
 	"gostatus/internal/gateway"
 )
 
@@ -27,7 +28,7 @@ var musicProviders = []musicProvider{
 	{
 		name:  "Spotify",
 		label: "listening to",
-		color: "#1db954",
+		color: badge.ColorSpotify,
 		logo:  "spotify",
 		message: func(a *gateway.Activity) string {
 			if a.Details == "" {
@@ -40,49 +41,35 @@ var musicProviders = []musicProvider{
 
 func (h *Handler) Music(w http.ResponseWriter, r *http.Request) {
 	svgHeaders(w)
-
 	fallback := qp(r, "fallback", "nothing")
 	def := musicProviders[0]
 
-	p, ok := h.store.Get(h.id(r, "/badge/music/"))
-	if !ok {
-		h.renderBadge(
-			w, r,
-			qp(r, "label", def.label),
-			fallback,
-			qp(r, "labelColor", "#555"),
-			qp(r, "color", def.color),
-			def.logo,
+	renderProvider := func(p musicProvider, message string) {
+		h.renderBadge(w, r,
+			qp(r, "label", p.label),
+			message,
+			qp(r, "labelColor", badge.ColorLabel),
+			qp(r, "color", p.color),
+			p.logo,
 		)
+	}
+
+	pres, ok := h.store.Get(h.id(r, "/badge/music/"))
+	if !ok {
+		renderProvider(def, fallback)
 		return
 	}
 
 	for _, provider := range musicProviders {
-		a := FindActivity(p, gateway.ActivityTypeListening, provider.name)
+		a := FindActivity(pres, gateway.ActivityTypeListening, provider.name)
 		if a == nil {
 			continue
 		}
-		msg := provider.message(a)
-		if msg == "" {
-			continue
+		if msg := provider.message(a); msg != "" {
+			renderProvider(provider, msg)
+			return
 		}
-		h.renderBadge(
-			w, r,
-			qp(r, "label", provider.label),
-			msg,
-			qp(r, "labelColor", "#555"),
-			qp(r, "color", provider.color),
-			provider.logo,
-		)
-		return
 	}
 
-	h.renderBadge(
-		w, r,
-		qp(r, "label", def.label),
-		fallback,
-		qp(r, "labelColor", "#555"),
-		qp(r, "color", def.color),
-		def.logo,
-	)
+	renderProvider(def, fallback)
 }
