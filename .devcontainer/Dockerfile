@@ -19,7 +19,8 @@ WORKDIR /app
 COPY --from=builder /build/gostatus .
 COPY --from=builder /build/assets ./assets
 
-EXPOSE 8080
+ENV PORT=8080
+EXPOSE ${PORT}
 
 ENTRYPOINT ["/app/gostatus"]
-CMD        ["-config", "/app/config.toml"]
+CMD        ["-config", "/app/config.toml", "-port", "8080"]

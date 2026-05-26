@@ -37,7 +37,11 @@ Then run:
 go run main.go
 ```
 
-The server listens on `:8080` by default. To change the port, update the `port` constant in `main.go`.
+The server listens on :8080 by default. To change the port locally, you can pass the -port flag:
+
+```bash
+go run main.go -port 9090
+```
 
 ### Docker
 
@@ -65,11 +69,11 @@ docker compose -f .devcontainer/compose.yaml up --build -d
 
 #### Changing the port
 
-The port is hardcoded to `8080`. To change it, update it in three places:
+The server listens on :8080 by default. To change it prepend the `PORT` environment variable to your command:
 
-1. `main.go` — the `port` constant
-2. `.devcontainer/compose.yaml` — the `ports` mapping and `healthcheck` URL
-3. `.devcontainer/Dockerfile` — the `EXPOSE` directive
+```bash
+PORT=9090 docker compose -f .devcontainer/compose.yaml up --build -d
+```
 
 ## Endpoints
 

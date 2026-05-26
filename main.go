@@ -19,14 +19,13 @@ type Config struct {
 }
 
 func main() {
-	port := "8080"
-
+	port := flag.String("port", "8080", "Port to listen on")
 	healthCheck := flag.Bool("health", false, "Run internal healthcheck")
 	configPath := flag.String("config", "config.toml", "Path to config.toml")
 	flag.Parse()
 
 	if *healthCheck {
-		resp, err := http.Get(fmt.Sprintf("http://localhost:%s/badge/status/0", port))
+		resp, err := http.Get(fmt.Sprintf("http://localhost:%s/badge/status/0", *port))
 		if err != nil || resp.StatusCode != http.StatusOK {
 			os.Exit(1)
 		}
@@ -48,6 +47,6 @@ func main() {
 	mux := http.NewServeMux()
 	handler.New(s).Register(mux)
 
-	log.Printf("Listening on :%s", port)
-	log.Fatal(http.ListenAndServe(":"+port, mux))
+	log.Printf("Listening on :%s", *port)
+	log.Fatal(http.ListenAndServe(":"+*port, mux))
 }
