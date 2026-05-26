@@ -1,0 +1,56 @@
+name: Bug Report
+description: Report broken behavior, incorrect output, or any other issues
+labels: ["bug"]
+body:
+    - type: textarea
+      id: summary
+      attributes:
+      label: What happened?
+      description: Describe the bug and what you expected instead.
+      placeholder: "e.g. Spotify activity is not detected even though Discord shows it correctly."
+      validations:
+      required: true
+
+    - type: textarea
+      id: reproduction
+      attributes:
+      label: Steps to reproduce
+      description: Explain how to reproduce the issue.
+      placeholder: |
+          1. Start the server
+          2. Open /badge/music/{user_id}
+          3. ...
+      validations:
+      required: true
+
+    - type: input
+      id: go_version
+      attributes:
+      label: Go version
+      placeholder: "e.g. go1.22.3"
+
+    - type: dropdown
+      id: os
+      attributes:
+      label: Operating System
+      options:
+          - Linux
+          - Windows
+          - macOS
+
+    - type: textarea
+      id: logs
+      attributes:
+      label: Logs or screenshots
+      description: Include relevant logs, errors, or screenshots if available.
+      render: shell
+
+    - type: checkboxes
+      id: checklist
+      attributes:
+      label: Checklist
+      options:
+          - label: I checked existing issues before creating this report.
+            required: true
+          - label: I tested this on the latest version.
+            required: true
