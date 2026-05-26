@@ -1,8 +1,11 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"gostatus/internal/gateway"
 	"gostatus/internal/handler"
@@ -13,29 +16,34 @@ import (
 
 type Config struct {
 	Token string
-	Port  string
 }
 
 func main() {
-	var conf Config
+	port := "8080"
 
-	_, err := toml.DecodeFile("config.toml", &conf)
-	if err != nil {
-		log.Fatal(err)
+	healthCheck := flag.Bool("health", false, "Run internal healthcheck")
+	configPath := flag.String("config", "config.toml", "Path to config.toml")
+	flag.Parse()
+
+	if *healthCheck {
+		resp, err := http.Get(fmt.Sprintf("http://localhost:%s/badge/status/0", port))
+		if err != nil || resp.StatusCode != http.StatusOK {
+			os.Exit(1)
+		}
+		os.Exit(0)
 	}
 
-	token := conf.Token
-	if token == "" || token == "YOUR_TOKEN" {
+	var conf Config
+	if _, err := toml.DecodeFile(*configPath, &conf); err != nil {
+		log.Fatalf("config: %v", err)
+	}
+
+	if conf.Token == "" || conf.Token == "YOUR_TOKEN" {
 		log.Fatal("Bot token is required in config.toml")
 	}
 
-	port := conf.Port
-	if port == "" {
-		port = "8080"
-	}
-
 	s := store.New()
-	go gateway.Connect(token, s)
+	go gateway.Connect(conf.Token, s)
 
 	mux := http.NewServeMux()
 	handler.New(s).Register(mux)

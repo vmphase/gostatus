@@ -1,0 +1,12 @@
+.git
+.gitignore
+.gitattributes
+
+.devcontainer
+.vscode
+.idea
+
+config.toml
+
+*.md
+LICENSE
