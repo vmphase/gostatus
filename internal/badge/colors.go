@@ -8,6 +8,7 @@ const (
 
 	// music
 	ColorSpotify = "#1db954"
+	ColorTIDAL = "#000000"
 
 	// media
 	ColorCrunchyroll = "#f47521"

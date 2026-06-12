@@ -37,6 +37,18 @@ var musicProviders = []musicProvider{
 			return a.Details + " by " + strings.ReplaceAll(a.State, "; ", ", ")
 		},
 	},
+	{
+		name:  "TIDAL",
+		label: "listening to",
+		color: badge.ColorTIDAL,
+		logo:  "tidal",
+		message: func(a *gateway.Activity) string {
+			if a.Details == "" || a.State == "" {
+				return ""
+			}
+			return a.Details + " by " + strings.ReplaceAll(a.State, "; ", ", ")
+		},
+	},
 }
 
 func (h *Handler) Music(w http.ResponseWriter, r *http.Request) {
