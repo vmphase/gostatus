@@ -20,7 +20,11 @@ func (h *Handler) Status(w http.ResponseWriter, r *http.Request) {
 	if r.URL.Query().Get("simple") == "true" && (status == "idle" || status == "dnd") {
 		status = "online"
 	}
-	h.renderBadge(w, r, "currently", status, badge.ColorLabel, badge.StatusColors[status], "")
+	color := badge.StatusColors[status]
+	if color == "" {
+		color = badge.ColorOffline
+	}
+	h.renderBadge(w, r, "currently", status, badge.ColorLabel, color, "")
 }
 
 // The game user is currently playing, excluding editor activities
