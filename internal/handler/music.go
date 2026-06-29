@@ -31,7 +31,7 @@ var musicProviders = []musicProvider{
 		color: badge.ColorSpotify,
 		logo:  "spotify",
 		message: func(a *gateway.Activity) string {
-			if a.Details == "" {
+			if a.Details == "" || a.State == "" {
 				return ""
 			}
 			return a.Details + " by " + strings.ReplaceAll(a.State, "; ", ", ")
@@ -54,6 +54,10 @@ var musicProviders = []musicProvider{
 func (h *Handler) Music(w http.ResponseWriter, r *http.Request) {
 	svgHeaders(w)
 	fallback := qp(r, "fallback", "nothing")
+	if len(musicProviders) == 0 {
+		h.renderBadge(w, r, "music", fallback, badge.ColorLabel, badge.ColorDiscord, "")
+		return
+	}
 	def := musicProviders[0]
 
 	renderProvider := func(p musicProvider, message string) {
