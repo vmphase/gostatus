@@ -35,5 +35,8 @@ func (s *Store) Get(id string) (Presence, bool) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 	p, ok := s.data[id]
+	if ok {
+		p.Activities = append([]Activity(nil), p.Activities...)
+	}
 	return p, ok
 }
