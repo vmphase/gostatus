@@ -84,6 +84,9 @@ var editors = []editor{
 }
 
 func findEditor(prefer string) editor {
+	if len(editors) == 0 {
+		return editor{label: "code", color: badge.ColorDiscord}
+	}
 	for _, ed := range editors {
 		if ed.prefer == prefer {
 			return ed
