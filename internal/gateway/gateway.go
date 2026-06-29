@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"gostatus/internal/store"
 	"log"
+	"sync"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -17,14 +18,38 @@ const (
 
 	intentGuilds         = 1 << 0
 	intentGuildPresences = 1 << 8
+
+	defaultHeartbeatInterval = 41250
+	maxBackoff              = 60
 )
 
+type seqHolder struct {
+	mu  sync.Mutex
+	seq *int
+}
+
+func (s *seqHolder) set(seq *int) {
+	s.mu.Lock()
+	s.seq = seq
+	s.mu.Unlock()
+}
+
+func (s *seqHolder) get() *int {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	return s.seq
+}
+
 func Connect(token string, s *store.Store) {
+	backoff := 1
 	for {
 		if err := run(token, s); err != nil {
-			log.Printf("Gateway disconnected: %v - reconnecting in 5s", err)
+			log.Printf("Gateway disconnected: %v - reconnecting in %ds", err, backoff)
 		}
-		time.Sleep(5 * time.Second)
+		time.Sleep(time.Duration(backoff) * time.Second)
+		if backoff < maxBackoff {
+			backoff *= 2
+		}
 	}
 }
 
@@ -35,7 +60,7 @@ func run(token string, s *store.Store) error {
 	}
 	defer conn.Close()
 
-	var seq *int
+	var seq seqHolder
 	heartbeatStop := make(chan struct{})
 	defer close(heartbeatStop)
 
@@ -50,7 +75,7 @@ func run(token string, s *store.Store) error {
 			continue
 		}
 		if p.S != nil {
-			seq = p.S
+			seq.set(p.S)
 		}
 
 		switch p.Op {
@@ -58,7 +83,12 @@ func run(token string, s *store.Store) error {
 			var hello struct {
 				HeartbeatInterval int `json:"heartbeat_interval"`
 			}
-			json.Unmarshal(p.D, &hello)
+			if err := json.Unmarshal(p.D, &hello); err != nil {
+				return err
+			}
+			if hello.HeartbeatInterval <= 0 {
+				hello.HeartbeatInterval = defaultHeartbeatInterval
+			}
 			go heartbeat(conn, hello.HeartbeatInterval, &seq, heartbeatStop)
 			sendIdentify(conn, token)
 		case 11: // HeartbeatAck - no op
@@ -70,7 +100,7 @@ func run(token string, s *store.Store) error {
 	}
 }
 
-func heartbeat(conn *websocket.Conn, intervalMs int, seq **int, stop <-chan struct{}) {
+func heartbeat(conn *websocket.Conn, intervalMs int, seq *seqHolder, stop <-chan struct{}) {
 	ticker := time.NewTicker(time.Duration(intervalMs) * time.Millisecond)
 	defer ticker.Stop()
 	for {
@@ -78,14 +108,20 @@ func heartbeat(conn *websocket.Conn, intervalMs int, seq **int, stop <-chan stru
 		case <-stop:
 			return
 		case <-ticker.C:
-			payload, _ := json.Marshal(Payload{Op: opHeartbeat, D: seqJSON(*seq)})
-			conn.WriteMessage(websocket.TextMessage, payload)
+			payload, err := json.Marshal(Payload{Op: opHeartbeat, D: seqJSON(seq.get())})
+			if err != nil {
+				log.Printf("Heartbeat marshal error: %v", err)
+				continue
+			}
+			if err := conn.WriteMessage(websocket.TextMessage, payload); err != nil {
+				log.Printf("Heartbeat write error: %v", err)
+			}
 		}
 	}
 }
 
 func sendIdentify(conn *websocket.Conn, token string) {
-	payload, _ := json.Marshal(map[string]any{
+	payload, err := json.Marshal(map[string]any{
 		"op": opIdentify,
 		"d": map[string]any{
 			"token":   token,
@@ -97,14 +133,23 @@ func sendIdentify(conn *websocket.Conn, token string) {
 			},
 		},
 	})
-	conn.WriteMessage(websocket.TextMessage, payload)
+	if err != nil {
+		log.Printf("Identify marshal error: %v", err)
+		return
+	}
+	if err := conn.WriteMessage(websocket.TextMessage, payload); err != nil {
+		log.Printf("Identify write error: %v", err)
+	}
 }
 
 func dispatch(event string, d json.RawMessage, s *store.Store) {
 	switch event {
 	case "GUILD_CREATE":
 		var gc guildCreate
-		json.Unmarshal(d, &gc)
+		if err := json.Unmarshal(d, &gc); err != nil {
+			log.Printf("Failed to unmarshal GUILD_CREATE: %v", err)
+			return
+		}
 		for _, pr := range gc.Presences {
 			if pr.User != nil && pr.User.ID != "" {
 				s.Set(pr.User.ID, store.Presence{
@@ -118,7 +163,10 @@ func dispatch(event string, d json.RawMessage, s *store.Store) {
 
 	case "PRESENCE_UPDATE":
 		var pu PresenceUpdate
-		json.Unmarshal(d, &pu)
+		if err := json.Unmarshal(d, &pu); err != nil {
+			log.Printf("Failed to unmarshal PRESENCE_UPDATE: %v", err)
+			return
+		}
 		if pu.User != nil && pu.User.ID != "" {
 			s.Set(pu.User.ID, store.Presence{
 				Status:       pu.Status,
