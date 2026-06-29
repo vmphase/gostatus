@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/base64"
 	"fmt"
+	"log"
 	"os"
 	"strings"
 	"text/template"
@@ -74,7 +75,7 @@ func Render(o Options) string {
 	total := lw + mw + shift
 
 	var buf bytes.Buffer
-	tpl.Execute(&buf, templateParams{
+	if err := tpl.Execute(&buf, templateParams{
 		Total:      total,
 		LW:         lw + shift,
 		MW:         mw,
@@ -88,6 +89,8 @@ func Render(o Options) string {
 		Message:    message,
 		LogoB64:    logoB64,
 		Style:      o.Style,
-	})
+	}); err != nil {
+		log.Printf("Badge template error: %v", err)
+	}
 	return buf.String()
 }
