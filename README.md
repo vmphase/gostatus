@@ -168,7 +168,7 @@ Activity object:
 | Field     | Type   | Description                                                         |
 | --------- | ------ | ------------------------------------------------------------------- |
 | `Name`    | string | Activity name, e.g. `Spotify`, `Visual Studio Code` or a game title |
-| `Type`    | number | `0` = Playing, `2` = Listening, `3` = Watching                      |
+| `Type`    | number | `0` = Playing, `1` = Streaming, `2` = Listening, `3` = Watching     |
 | `Details` | string | Activity details (e.g. song title, editor file)                     |
 | `State`   | string | Activity state (e.g. artist name, workspace)                        |
 | `SyncID`  | string | Activity sync ID (e.g. Spotify track ID)                            |

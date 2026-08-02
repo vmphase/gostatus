@@ -3,9 +3,10 @@ package gateway
 import "encoding/json"
 
 const (
-	ActivityTypePlaying   = 0
-	ActivityTypeListening = 2
-	ActivityTypeWatching  = 3
+	ActivityTypePlaying   = iota
+	ActivityTypeStreaming
+	ActivityTypeListening
+	ActivityTypeWatching
 )
 
 type Payload struct {
