@@ -31,9 +31,9 @@ func (h *Handler) Presence(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(p)
 	} else {
 		json.NewEncoder(w).Encode(map[string]any{
-			"status":        "offline",
-			"client_status": map[string]any{},
-			"activities":    []any{},
+			"Status":       "offline",
+			"ClientStatus": map[string]any{},
+			"Activities":   []any{},
 		})
 	}
 }
