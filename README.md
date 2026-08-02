@@ -153,4 +153,46 @@ Episode and series the user is currently watching on [Crunchyroll](https://www.c
 
 ### `GET /presence/{discord_user_id}`
 
-Raw presence data as JSON. CORS-enabled.
+Raw presence data as JSON. CORS-enabled. Returns the full cached Discord presence payload for the user.
+
+Response object:
+
+| Field          | Type             | Description                                         |
+| -------------- | ---------------- | --------------------------------------------------- |
+| `Status`       | string           | `online`, `idle`, `dnd` or `offline`                |
+| `ClientStatus` | object           | Device-based status, e.g. `{ "desktop": "online" }` |
+| `Activities`   | array of objects | Currently active activities (see below)             |
+
+Activity object:
+
+| Field     | Type   | Description                                                         |
+| --------- | ------ | ------------------------------------------------------------------- |
+| `Name`    | string | Activity name, e.g. `Spotify`, `Visual Studio Code` or a game title |
+| `Type`    | number | `0` = Playing, `2` = Listening, `3` = Watching                      |
+| `Details` | string | Activity details (e.g. song title, editor file)                     |
+| `State`   | string | Activity state (e.g. artist name, workspace)                        |
+| `SyncID`  | string | Activity sync ID (e.g. Spotify track ID)                            |
+
+Example response:
+
+```json
+{
+    "Status": "online",
+    "ClientStatus": { "desktop": "online" },
+    "Activities": [
+        {
+            "Name": "Spotify",
+            "Type": 2,
+            "Details": "Example Song",
+            "State": "Example Artist",
+            "SyncID": "4cOdK2wGLETKBDO"
+        }
+    ]
+}
+```
+
+If the user has no cached presence (e.g. no shared server with the bot), a fallback response is returned:
+
+```json
+{ "Activities": [], "ClientStatus": {}, "Status": "offline" }
+```
