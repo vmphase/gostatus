@@ -1,9 +1,10 @@
 # gostatus
 
-Discord presence badges as SVGs to show discord status, music-, editor- or game-activity using [shields.io](https://shields.io/).
+Discord presence badges as SVGs to show discord status, music-, editor- or game-activity using [shields.io](https://shields.io/).  
+_Third-party showcase: https://soheab.com/discordbadges_
 
 > [!NOTE]
-> Originally inspired by [statusbadges](https://github.com/advaith1/statusbadges), rewritten in Go with improvements.
+> Originally inspired by [statusbadges](https://github.com/advaith1/statusbadges), rewritten in Go with improvements.  
 
 ## Running
 
