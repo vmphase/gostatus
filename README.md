@@ -35,13 +35,13 @@ token = "your_bot_token_here"
 Then run:
 
 ```bash
-go run main.go
+go run ./cmd/gostatus
 ```
 
 The server listens on :8080 by default. To change the port locally, you can pass the -port flag:
 
 ```bash
-go run main.go -port 9090
+go run ./cmd/gostatus -port 9090
 ```
 
 ### Docker
