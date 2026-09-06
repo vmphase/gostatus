@@ -2,6 +2,7 @@ package gateway
 
 import "encoding/json"
 
+// Discord activity types.
 const (
 	ActivityTypePlaying = iota
 	ActivityTypeStreaming
@@ -9,6 +10,7 @@ const (
 	ActivityTypeWatching
 )
 
+// Payload is a gateway event frame.
 type Payload struct {
 	Op int             `json:"op"`
 	D  json.RawMessage `json:"d"`
@@ -16,6 +18,7 @@ type Payload struct {
 	T  *string         `json:"t"`
 }
 
+// PresenceUpdate is a PRESENCE_UPDATE gateway event.
 type PresenceUpdate struct {
 	User         *UserMin   `json:"user,omitempty"`
 	Status       string     `json:"status"`
@@ -23,10 +26,12 @@ type PresenceUpdate struct {
 	Activities   []Activity `json:"activities"`
 }
 
+// UserMin is the minimal user payload sent with presence updates.
 type UserMin struct {
 	ID string `json:"id"`
 }
 
+// Activity is a Discord activity as reported by the gateway.
 type Activity struct {
 	Name    string `json:"name"`
 	Type    int    `json:"type"`

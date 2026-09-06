@@ -2,12 +2,13 @@ package handler
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"strings"
 )
 
-// Full cached Discord presence payload for a user
-// Fallbacks to an offline/empty presence response if not found
+// Presence serves the full cached Discord presence payload for a user,
+// falling back to an offline/empty response if not found.
 func (h *Handler) Presence(w http.ResponseWriter, r *http.Request) {
 	id := strings.TrimPrefix(r.URL.Path, "/presence/")
 
@@ -23,17 +24,23 @@ func (h *Handler) Presence(w http.ResponseWriter, r *http.Request) {
 
 	if id == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		_ = json.NewEncoder(w).Encode(map[string]string{"error": "missing user id"})
+		writeJSON(w, map[string]string{"error": "missing user id"})
 		return
 	}
 
 	if p, ok := h.store.Get(id); ok {
-		_ = json.NewEncoder(w).Encode(p)
+		writeJSON(w, p)
 	} else {
-		_ = json.NewEncoder(w).Encode(map[string]any{
+		writeJSON(w, map[string]any{
 			"Status":       "offline",
 			"ClientStatus": map[string]any{},
 			"Activities":   []any{},
 		})
+	}
+}
+
+func writeJSON(w http.ResponseWriter, v any) {
+	if err := json.NewEncoder(w).Encode(v); err != nil {
+		log.Printf("encode JSON response: %v", err)
 	}
 }

@@ -2,10 +2,12 @@ package gateway
 
 import (
 	"encoding/json"
-	"gostatus/internal/store"
 	"log"
+	"strconv"
 	"sync"
 	"time"
+
+	"gostatus/internal/store"
 
 	"github.com/gorilla/websocket"
 )
@@ -40,6 +42,8 @@ func (s *seqHolder) get() *int {
 	return s.seq
 }
 
+// Connect connects to the Discord gateway and maintains the presence store,
+// reconnecting with exponential backoff on failure.
 func Connect(token string, s *store.Store) {
 	backoff := 1
 	for {
@@ -199,6 +203,5 @@ func seqJSON(seq *int) json.RawMessage {
 	if seq == nil {
 		return json.RawMessage("null")
 	}
-	b, _ := json.Marshal(*seq)
-	return b
+	return json.RawMessage(strconv.Itoa(*seq))
 }

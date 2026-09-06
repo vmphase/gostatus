@@ -8,7 +8,13 @@ import (
 	"gostatus/internal/gateway"
 )
 
-// single code editor activity
+// ?prefer= values and badge slugs for the supported code editors.
+const (
+	editorVSCode = "vscode"
+	editorZed    = "zed"
+)
+
+// single code editor activity.
 type editor struct {
 	// discord activity name to match against
 	name string
@@ -25,14 +31,14 @@ type editor struct {
 	message func(a *gateway.Activity) string
 }
 
-// ordered registry of supported code editors
+// ordered registry of supported code editors.
 var editors = []editor{
 	{
 		name:   "Visual Studio Code",
-		prefer: "vscode",
-		label:  "vscode",
+		prefer: editorVSCode,
+		label:  editorVSCode,
 		color:  badge.ColorVSCode,
-		logo:   "vscode",
+		logo:   editorVSCode,
 		message: func(a *gateway.Activity) string {
 			if a.Details == "" {
 				return ""
@@ -47,10 +53,10 @@ var editors = []editor{
 	},
 	{
 		name:   "Zed",
-		prefer: "zed",
-		label:  "zed",
+		prefer: editorZed,
+		label:  editorZed,
 		color:  badge.ColorZed,
-		logo:   "zed",
+		logo:   editorZed,
 		message: func(a *gateway.Activity) string {
 			if a.Details == "" {
 				return ""
@@ -95,6 +101,7 @@ func findEditor(prefer string) editor {
 	return editors[0]
 }
 
+// Code renders a badge for the code editor activity being used.
 func (h *Handler) Code(w http.ResponseWriter, r *http.Request) {
 	svgHeaders(w)
 
