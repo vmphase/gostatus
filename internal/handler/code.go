@@ -8,13 +8,11 @@ import (
 	"gostatus/internal/gateway"
 )
 
-// ?prefer= values and badge slugs for the supported code editors.
 const (
 	editorVSCode = "vscode"
 	editorZed    = "zed"
 )
 
-// single code editor activity.
 type editor struct {
 	// discord activity name to match against
 	name string
@@ -31,7 +29,6 @@ type editor struct {
 	message func(a *gateway.Activity) string
 }
 
-// ordered registry of supported code editors.
 var editors = []editor{
 	{
 		name:   "Visual Studio Code",

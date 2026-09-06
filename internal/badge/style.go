@@ -1,6 +1,6 @@
 package badge
 
-// Style describes the visual style of a badge.
+// Style is a badge visual style.
 type Style string
 
 // Supported badge styles.

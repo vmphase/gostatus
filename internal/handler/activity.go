@@ -5,10 +5,10 @@ import (
 	"gostatus/internal/store"
 )
 
-// Activity is a cached Discord activity.
+// Activity is a type alias for gateway.Activity.
 type Activity = gateway.Activity
 
-// FindActivity returns the first activity of the given type and name, or nil.
+// FindActivity returns the first activity matching the given type and name, or nil.
 func FindActivity(p store.Presence, actType int, name string) *Activity {
 	for _, a := range p.Activities {
 		if a.Type == actType && (name == "" || a.Name == name) {

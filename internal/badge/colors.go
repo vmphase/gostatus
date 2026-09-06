@@ -1,6 +1,6 @@
 package badge
 
-// Badge colors for the supported services and statuses.
+// Badge color constants for supported services and statuses.
 const (
 	ColorVSCode       = "#23a7f2"
 	ColorZed          = "#7c6df2"

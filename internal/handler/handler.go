@@ -33,8 +33,6 @@ func (h *Handler) id(r *http.Request, prefix string) string {
 	return strings.TrimPrefix(r.URL.Path, prefix)
 }
 
-// builds a badge.Options from the request, merging caller supplied
-// defaults with any query-param overrides the user may have provided.
 func (h *Handler) badgeOpts(r *http.Request, label, message, labelColor, color, logo string) badge.Options {
 	hideLogo := r.URL.Query().Get("hideLogo") == "true"
 	return badge.Options{
@@ -57,7 +55,6 @@ func svgHeaders(w http.ResponseWriter) {
 	w.Header().Set("Cache-Control", "max-age=0, no-cache, no-store, must-revalidate")
 }
 
-// the query param value for key, falling back to fallback.
 func qp(r *http.Request, key, fallback string) string {
 	if v := r.URL.Query().Get(key); v != "" {
 		return v

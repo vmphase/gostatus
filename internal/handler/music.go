@@ -8,7 +8,6 @@ import (
 	"gostatus/internal/gateway"
 )
 
-// single music-service activity.
 type musicProvider struct {
 	// discord activity name to match against
 	name string
@@ -23,7 +22,6 @@ type musicProvider struct {
 	message func(a *gateway.Activity) string
 }
 
-// ordered registry of supported music services.
 var musicProviders = []musicProvider{
 	{
 		name:  "Spotify",
