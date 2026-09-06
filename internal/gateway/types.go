@@ -3,7 +3,7 @@ package gateway
 import "encoding/json"
 
 const (
-	ActivityTypePlaying   = iota
+	ActivityTypePlaying = iota
 	ActivityTypeStreaming
 	ActivityTypeListening
 	ActivityTypeWatching

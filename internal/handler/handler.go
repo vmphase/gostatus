@@ -45,7 +45,7 @@ func (h *Handler) badgeOpts(r *http.Request, label, message, labelColor, color, 
 }
 
 func (h *Handler) renderBadge(w http.ResponseWriter, r *http.Request, label, message, labelColor, color, logo string) {
-	fmt.Fprint(w, badge.Render(h.badgeOpts(r, label, message, labelColor, color, logo)))
+	_, _ = fmt.Fprint(w, badge.Render(h.badgeOpts(r, label, message, labelColor, color, logo)))
 }
 
 func svgHeaders(w http.ResponseWriter) {

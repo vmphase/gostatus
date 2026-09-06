@@ -23,14 +23,14 @@ func (h *Handler) Presence(w http.ResponseWriter, r *http.Request) {
 
 	if id == "" {
 		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(map[string]string{"error": "missing user id"})
+		_ = json.NewEncoder(w).Encode(map[string]string{"error": "missing user id"})
 		return
 	}
 
 	if p, ok := h.store.Get(id); ok {
-		json.NewEncoder(w).Encode(p)
+		_ = json.NewEncoder(w).Encode(p)
 	} else {
-		json.NewEncoder(w).Encode(map[string]any{
+		_ = json.NewEncoder(w).Encode(map[string]any{
 			"Status":       "offline",
 			"ClientStatus": map[string]any{},
 			"Activities":   []any{},

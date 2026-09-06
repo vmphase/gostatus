@@ -20,7 +20,7 @@ const (
 	intentGuildPresences = 1 << 8
 
 	defaultHeartbeatInterval = 41250
-	maxBackoff              = 60
+	maxBackoff               = 60
 )
 
 type seqHolder struct {
@@ -58,7 +58,11 @@ func run(token string, s *store.Store) error {
 	if err != nil {
 		return err
 	}
-	defer conn.Close()
+	defer func() {
+		if err := conn.Close(); err != nil {
+			log.Printf("Gateway close error: %v", err)
+		}
+	}()
 
 	var seq seqHolder
 	heartbeatStop := make(chan struct{})

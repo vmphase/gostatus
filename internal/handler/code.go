@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"strings"
 
-	"gostatus/internal/gateway"
 	"gostatus/internal/badge"
+	"gostatus/internal/gateway"
 )
 
 // single code editor activity
