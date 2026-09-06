@@ -4,13 +4,13 @@ Discord presence badges as SVGs to show discord status, music-, editor- or game-
 _Third-party showcase: https://soheab.com/discordbadges_
 
 > [!NOTE]
-> Originally inspired by [statusbadges](https://github.com/advaith1/statusbadges), rewritten in Go with improvements.  
+> Originally inspired by [statusbadges](https://github.com/advaith1/statusbadges), rewritten in Go with improvements.
 
 ## Running
 
 ### Requirements
 
-- [Go 1.21+](https://go.dev/)
+- [Go 1.26.0+](https://go.dev/)
 - **Server Members** and **Presence** intents enabled at the [Dev Portal](https://discord.com/developers/home)
 - Bot must be in a shared server with the users you want to track
 
