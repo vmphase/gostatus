@@ -2,12 +2,12 @@ package gateway
 
 import "encoding/json"
 
-// Discord activity types.
+// Discord activity type constants.
 const (
-	ActivityTypePlaying = iota
-	ActivityTypeStreaming
-	ActivityTypeListening
-	ActivityTypeWatching
+	ActivityTypePlaying   = iota // Playing a game
+	ActivityTypeStreaming        // Streaming
+	ActivityTypeListening        // Listening to music
+	ActivityTypeWatching         // Watching media
 )
 
 // Payload is a gateway event frame.

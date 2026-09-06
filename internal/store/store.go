@@ -2,7 +2,7 @@ package store
 
 import "sync"
 
-// Activity describes a single Discord activity in the cache.
+// Activity represents a single Discord activity in the cache.
 type Activity struct {
 	Name    string
 	Type    int
@@ -11,7 +11,7 @@ type Activity struct {
 	SyncID  string
 }
 
-// Presence is a cached Discord presence.
+// Presence is a cached Discord user presence.
 type Presence struct {
 	Status       string
 	ClientStatus any
