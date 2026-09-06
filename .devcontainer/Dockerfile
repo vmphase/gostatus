@@ -10,7 +10,7 @@ RUN --mount=type=cache,target=/go/pkg/mod/ \
 COPY . .
 
 RUN --mount=type=cache,target=/root/.cache/go-build \
-    CGO_ENABLED=0 go build -ldflags="-s -w" -trimpath -o gostatus ./main.go
+    CGO_ENABLED=0 go build -ldflags="-s -w" -trimpath -o gostatus ./cmd/gostatus
 
 FROM gcr.io/distroless/static-debian12:nonroot
 
