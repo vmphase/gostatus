@@ -2,63 +2,44 @@ package main
 
 import (
 	"context"
-	"flag"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"time"
 
+	"gostatus/internal/config"
 	"gostatus/internal/gateway"
 	"gostatus/internal/handler"
 	"gostatus/internal/store"
-
-	"github.com/BurntSushi/toml"
 )
 
-// Config holds the runtime configuration loaded from config.toml.
-type Config struct {
-	Token string
-}
-
 func main() {
-	port := flag.String("port", "8080", "Port to listen on")
-	healthCheck := flag.Bool("health", false, "Run internal healthcheck")
-	configPath := flag.String("config", "config.toml", "Path to config.toml")
-	flag.Parse()
+	cfg := config.Load()
 
-	if *healthCheck {
-		if err := checkHealth(*port); err != nil {
+	if cfg.Healthcheck {
+		if err := checkHealth(cfg.Port); err != nil {
 			log.Println("health check failed:", err)
 			os.Exit(1)
 		}
 		os.Exit(0)
 	}
 
-	var conf Config
-	if _, err := toml.DecodeFile(*configPath, &conf); err != nil {
-		log.Fatalf("config: %v", err)
-	}
-
-	if conf.Token == "" || conf.Token == "YOUR_TOKEN" {
-		log.Fatal("Bot token is required in config.toml")
-	}
-
 	s := store.New()
-	go gateway.Connect(conf.Token, s)
+	go gateway.Connect(cfg.Token, s)
 
 	mux := http.NewServeMux()
 	handler.New(s).Register(mux)
 
 	srv := &http.Server{
-		Addr:              ":" + *port,
+		Addr:              ":" + cfg.Port,
 		Handler:           mux,
 		ReadHeaderTimeout: 5 * time.Second,
 		ReadTimeout:       10 * time.Second,
 		WriteTimeout:      10 * time.Second,
 		IdleTimeout:       30 * time.Second,
 	}
-	log.Printf("Listening on :%s", *port)
+	log.Printf("Listening on :%s", cfg.Port)
 	log.Fatal(srv.ListenAndServe())
 }
 

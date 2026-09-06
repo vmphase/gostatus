@@ -22,14 +22,15 @@ cd gostatus
 go mod tidy
 ```
 
-Copy the example config and set your bot token:
+Copy the example env file and set your bot token:
 
 ```bash
-cp config.toml.example config.toml
+cp .env.example .env
 ```
 
-```toml
-token = "your_bot_token_here"
+```dotenv
+PORT=8080
+TOKEN=your_bot_token_here
 ```
 
 Then run:
@@ -38,11 +39,12 @@ Then run:
 go run ./cmd/gostatus
 ```
 
-The server listens on :8080 by default. To change the port locally, you can pass the -port flag:
+Configuration is read from the environment (via `.env` if present). Available variables:
 
-```bash
-go run ./cmd/gostatus -port 9090
-```
+| Variable | Required | Default | Description                           |
+| -------- | -------- | ------- | ------------------------------------- |
+| `TOKEN`  | yes      | —       | Discord bot token from the Dev Portal |
+| `PORT`   | no       | `8080`  | Port the HTTP server listens on       |
 
 ### Docker
 
@@ -55,14 +57,15 @@ go run ./cmd/gostatus -port 9090
 Copy and configure:
 
 ```bash
-cp config.toml.example config.toml
+cp .env.example .env
 ```
 
-```toml
-token = "your_bot_token_here"
+```dotenv
+PORT=8080
+TOKEN=your_bot_token_here
 ```
 
-Build and start:
+Build and start (the `.env` file is picked up automatically):
 
 ```bash
 docker compose -f .devcontainer/compose.yaml up --build -d
@@ -70,7 +73,7 @@ docker compose -f .devcontainer/compose.yaml up --build -d
 
 #### Changing the port
 
-The server listens on :8080 by default. To change it prepend the `PORT` environment variable to your command:
+The server listens on :8080 by default. To change it, set `PORT` in your `.env` file or prepend it to the command:
 
 ```bash
 PORT=9090 docker compose -f .devcontainer/compose.yaml up --build -d
