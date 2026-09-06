@@ -9,8 +9,8 @@ import (
 	"gostatus/internal/gateway"
 )
 
-// Current Discord presence status (online, idle, dnd, offline)
-// Accepts ?simple=true to collapse idle and dnd into "online"
+// Status renders the current Discord presence status (online, idle, dnd, offline).
+// Accepts ?simple=true to collapse idle and dnd into "online".
 func (h *Handler) Status(w http.ResponseWriter, r *http.Request) {
 	svgHeaders(w)
 	status := "offline"
@@ -27,7 +27,7 @@ func (h *Handler) Status(w http.ResponseWriter, r *http.Request) {
 	h.renderBadge(w, r, "currently", status, badge.ColorLabel, color, "")
 }
 
-// The game user is currently playing, excluding editor activities
+// Playing renders the game the user is currently playing, excluding editor activities.
 func (h *Handler) Playing(w http.ResponseWriter, r *http.Request) {
 	svgHeaders(w)
 
@@ -57,7 +57,7 @@ func (h *Handler) Playing(w http.ResponseWriter, r *http.Request) {
 	)
 }
 
-// CrunchyRoll episode and series the user is currently watching
+// CrunchyRoll renders the episode and series the user is currently watching.
 func (h *Handler) CrunchyRoll(w http.ResponseWriter, r *http.Request) {
 	svgHeaders(w)
 

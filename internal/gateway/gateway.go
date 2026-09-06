@@ -2,10 +2,12 @@ package gateway
 
 import (
 	"encoding/json"
-	"gostatus/internal/store"
 	"log"
+	"strconv"
 	"sync"
 	"time"
+
+	"gostatus/internal/store"
 
 	"github.com/gorilla/websocket"
 )
@@ -20,7 +22,7 @@ const (
 	intentGuildPresences = 1 << 8
 
 	defaultHeartbeatInterval = 41250
-	maxBackoff              = 60
+	maxBackoff               = 60
 )
 
 type seqHolder struct {
@@ -40,6 +42,8 @@ func (s *seqHolder) get() *int {
 	return s.seq
 }
 
+// Connect connects to the Discord gateway and maintains the presence store,
+// reconnecting with exponential backoff on failure.
 func Connect(token string, s *store.Store) {
 	backoff := 1
 	for {
@@ -58,7 +62,11 @@ func run(token string, s *store.Store) error {
 	if err != nil {
 		return err
 	}
-	defer conn.Close()
+	defer func() {
+		if err := conn.Close(); err != nil {
+			log.Printf("Gateway close error: %v", err)
+		}
+	}()
 
 	var seq seqHolder
 	heartbeatStop := make(chan struct{})
@@ -195,6 +203,5 @@ func seqJSON(seq *int) json.RawMessage {
 	if seq == nil {
 		return json.RawMessage("null")
 	}
-	b, _ := json.Marshal(*seq)
-	return b
+	return json.RawMessage(strconv.Itoa(*seq))
 }

@@ -1,0 +1,116 @@
+version: "2"
+
+run:
+  timeout: 5m
+
+linters:
+  default: none
+  enable:
+    - errcheck # Unchecked error return values (deferred Close(), etc.).
+    - govet # Standard vet checks (printf verbs, copylocks, loopy, ...).
+    - ineffassign # Assignments that have no effect on the rest of the code.
+    - staticcheck # Broad SA* analysis (bugs, performance, style, ...).
+    - unused # Unused functions, types, and variables.
+
+    - bodyclose # HTTP response bodies must be closed (health check).
+    - copyloopvar # Loop vars captured before the range-var reuse change.
+    - errchkjson # JSON encoding is used heavily (badge + presence APIs).
+    - errorlint # fmt.Errorf / errors wrapping discipline.
+    - gosec # Security audit (found the missing server timeouts).
+    - noctx # HTTP requests must carry a context.
+
+    - asciicheck # Identifiers should stay ASCII-only.
+    - bidichk # Unwanted Unicode bidi control characters.
+    - goconst # Existing string constants (see handler/code.go).
+    - gocritic # High-value generic checks (hugeParam, exitAfterDefer, ...).
+    - gocyclo # Cyclomatic complexity cap (see settings).
+    - godot # Comments must end in a period.
+    - godox # No lingering TODO/FIXME markers allowed.
+    - misspell # US-spelling typos in comments/identifiers.
+    - nolintlint # Any //nolint must be specific and explained.
+    - revive # Doc comments + idiomatic Go (the exported rule).
+    - unconvert # Redundant type conversions (e.g. Activity(a)).
+    - unparam # Unused or always-constant function parameters.
+    - whitespace # Leading/trailing whitespace in code lines.
+  settings:
+    goconst:
+      min-len: 3
+      min-occurrences: 3
+    gocritic:
+      enabled-tags:
+        - diagnostic
+        - performance
+        - style
+        - opinionated
+      disabled-checks:
+        - dupImport
+        - ifElseChain
+        - octalLiteral
+        - whyNoLint
+    gocyclo:
+      min-complexity: 15
+    godox:
+      keywords:
+        - TODO
+        - FIXME
+        - HACK
+    govet:
+      enable-all: true
+      disable:
+        - fieldalignment
+        - shadow
+    misspell:
+      locale: US
+    nolintlint:
+      allow-unused: false
+      require-explanation: true
+      require-specific: true
+    revive:
+      rules:
+        - name: blank-imports
+        - name: context-as-argument
+        - name: context-keys-type
+        - name: dot-imports
+        - name: error-return
+        - name: error-strings
+        - name: error-naming
+        - name: exported
+        - name: if-return
+        - name: increment-decrement
+        - name: var-naming
+        - name: var-declaration
+        - name: range
+        - name: receiver-naming
+        - name: time-naming
+        - name: unexported-return
+        - name: indent-error-flow
+        - name: errorf
+        - name: superfluous-else
+        - name: unreachable-code
+        - name: redefines-builtin-id
+  exclusions:
+    # Never lint generated code.
+    generated: strict
+    rules:
+      # Tests may skip doc-comment requirements (no tests yet, kept for later).
+      - linters:
+          - revive
+        text: "exported (method|function|type|const) (.+) should have comment or be unexported"
+        path: (_test\.go)$
+      # errcheck: benign functions whose return values are conventionally ignored.
+      - linters:
+          - errcheck
+        text: "Error return value of .((os\\.)?std(out|err)\\..*|.*Close|.*Flush|os\\.Remove(All)?|.*print(f|ln)?|os\\.(Un)?Setenv). is not checked"
+      - linters:
+          - gocritic
+        text: "singleCaseSwitch: should rewrite switch statement to if statement"
+      - linters:
+          - gosec
+        text: "G705: XSS via taint analysis"
+
+formatters:
+  enable:
+    - gofmt
+    - goimports
+  exclusions:
+    generated: strict

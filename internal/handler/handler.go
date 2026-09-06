@@ -9,14 +9,17 @@ import (
 	"gostatus/internal/store"
 )
 
+// Handler serves badge and presence HTTP endpoints.
 type Handler struct {
 	store *store.Store
 }
 
+// New returns a Handler backed by the given presence store.
 func New(s *store.Store) *Handler {
 	return &Handler{store: s}
 }
 
+// Register wires the handler's HTTP routes into the given mux.
 func (h *Handler) Register(mux *http.ServeMux) {
 	mux.HandleFunc("/badge/status/", h.Status)
 	mux.HandleFunc("/badge/playing/", h.Playing)
@@ -31,7 +34,7 @@ func (h *Handler) id(r *http.Request, prefix string) string {
 }
 
 // builds a badge.Options from the request, merging caller supplied
-// defaults with any query-param overrides the user may have provided
+// defaults with any query-param overrides the user may have provided.
 func (h *Handler) badgeOpts(r *http.Request, label, message, labelColor, color, logo string) badge.Options {
 	hideLogo := r.URL.Query().Get("hideLogo") == "true"
 	return badge.Options{
@@ -45,7 +48,8 @@ func (h *Handler) badgeOpts(r *http.Request, label, message, labelColor, color, 
 }
 
 func (h *Handler) renderBadge(w http.ResponseWriter, r *http.Request, label, message, labelColor, color, logo string) {
-	fmt.Fprint(w, badge.Render(h.badgeOpts(r, label, message, labelColor, color, logo)))
+	opts := h.badgeOpts(r, label, message, labelColor, color, logo)
+	_, _ = fmt.Fprint(w, badge.Render(&opts))
 }
 
 func svgHeaders(w http.ResponseWriter) {
@@ -53,7 +57,7 @@ func svgHeaders(w http.ResponseWriter) {
 	w.Header().Set("Cache-Control", "max-age=0, no-cache, no-store, must-revalidate")
 }
 
-// the query param value for key, falling back to fallback
+// the query param value for key, falling back to fallback.
 func qp(r *http.Request, key, fallback string) string {
 	if v := r.URL.Query().Get(key); v != "" {
 		return v

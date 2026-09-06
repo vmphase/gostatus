@@ -18,6 +18,7 @@ const (
 	ftbPad    = 20
 )
 
+// Options configures how a badge is rendered.
 type Options struct {
 	Label      string
 	Message    string
@@ -55,7 +56,8 @@ func loadLogo(name string) string {
 	return base64.StdEncoding.EncodeToString(data)
 }
 
-func Render(o Options) string {
+// Render produces an SVG badge for the given options.
+func Render(o *Options) string {
 	logoB64 := loadLogo(o.Logo)
 
 	label, message := o.Label, o.Message

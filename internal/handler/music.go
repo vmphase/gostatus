@@ -8,7 +8,7 @@ import (
 	"gostatus/internal/gateway"
 )
 
-// single music-service activity
+// single music-service activity.
 type musicProvider struct {
 	// discord activity name to match against
 	name string
@@ -23,7 +23,7 @@ type musicProvider struct {
 	message func(a *gateway.Activity) string
 }
 
-// ordered registry of supported music services
+// ordered registry of supported music services.
 var musicProviders = []musicProvider{
 	{
 		name:  "Spotify",
@@ -51,6 +51,7 @@ var musicProviders = []musicProvider{
 	},
 }
 
+// Music renders a badge for the music the user is currently listening to.
 func (h *Handler) Music(w http.ResponseWriter, r *http.Request) {
 	svgHeaders(w)
 	fallback := qp(r, "fallback", "nothing")
