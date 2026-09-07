@@ -14,7 +14,7 @@ type Activity struct {
 // Presence is a cached Discord user presence.
 type Presence struct {
 	Status       string
-	ClientStatus any
+	ClientStatus map[string]string
 	Activities   []Activity
 }
 

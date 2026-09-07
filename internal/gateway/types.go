@@ -20,10 +20,10 @@ type Payload struct {
 
 // PresenceUpdate is a PRESENCE_UPDATE gateway event.
 type PresenceUpdate struct {
-	User         *UserMin   `json:"user,omitempty"`
-	Status       string     `json:"status"`
-	ClientStatus any        `json:"client_status"`
-	Activities   []Activity `json:"activities"`
+	User         *UserMin          `json:"user,omitempty"`
+	Status       string            `json:"status"`
+	ClientStatus map[string]string `json:"client_status"`
+	Activities   []Activity        `json:"activities"`
 }
 
 // UserMin is the minimal user payload sent with presence updates.

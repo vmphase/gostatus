@@ -33,7 +33,7 @@ func (h *Handler) Presence(w http.ResponseWriter, r *http.Request) {
 	} else {
 		writeJSON(w, map[string]any{
 			"Status":       "offline",
-			"ClientStatus": map[string]any{},
+			"ClientStatus": map[string]string{},
 			"Activities":   []any{},
 		})
 	}
