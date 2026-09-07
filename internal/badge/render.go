@@ -2,13 +2,16 @@ package badge
 
 import (
 	"bytes"
+	"embed"
 	"encoding/base64"
 	"fmt"
 	"log"
-	"os"
 	"strings"
 	"text/template"
 )
+
+//go:embed all:assets
+var assetsFS embed.FS
 
 const (
 	logoShift = 15
@@ -38,7 +41,7 @@ type templateParams struct {
 }
 
 var tpl = func() *template.Template {
-	b, err := os.ReadFile("assets/badge.svg")
+	b, err := assetsFS.ReadFile("assets/badge.svg")
 	if err != nil {
 		panic(err)
 	}
@@ -49,7 +52,7 @@ func loadLogo(name string) string {
 	if name == "" {
 		return ""
 	}
-	data, err := os.ReadFile(fmt.Sprintf("assets/logos/%s.svg", name))
+	data, err := assetsFS.ReadFile(fmt.Sprintf("assets/logos/%s.svg", name))
 	if err != nil {
 		return ""
 	}
