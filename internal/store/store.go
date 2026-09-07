@@ -11,6 +11,7 @@ type Activity struct {
 	Type    int
 	Details string
 	State   string
+	URL     string
 	SyncID  string
 }
 

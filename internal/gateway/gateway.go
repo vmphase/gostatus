@@ -195,6 +195,7 @@ func toStoreActivities(in []Activity) []store.Activity {
 			Type:    a.Type,
 			Details: a.Details,
 			State:   a.State,
+			URL:     a.URL,
 			SyncID:  a.SyncID,
 		}
 	}

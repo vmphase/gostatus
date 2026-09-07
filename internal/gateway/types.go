@@ -37,6 +37,7 @@ type Activity struct {
 	Type    int    `json:"type"`
 	Details string `json:"details"`
 	State   string `json:"state"`
+	URL     string `json:"url"`
 	SyncID  string `json:"sync_id"`
 }
 

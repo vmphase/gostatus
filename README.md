@@ -149,6 +149,20 @@ Game the user is currently playing (editor activities are excluded).
 
 ---
 
+### `GET /badge/streaming/{discord_user_id}`
+
+Live stream the user is currently broadcasting.
+
+| Query        | Default     | Description                                         |
+| ------------ | ----------- | --------------------------------------------------- |
+| `label`      | `streaming` | Left side text                                      |
+| `color`      | `#5865f2`   | Right side background color                         |
+| `labelColor` | `#555`      | Left side background color                          |
+| `style`      | `flat`      | Badge style: `flat`, `flat-square`, `for-the-badge` |
+| `fallback`   | `nothing`   | Text shown when not streaming                       |
+
+---
+
 ### `GET /badge/crunchyroll/{discord_user_id}`
 
 Episode and series the user is currently watching on [Crunchyroll](https://www.crunchyroll.com/).
@@ -184,6 +198,7 @@ Activity object:
 | `Type`    | number | `0` = Playing, `1` = Streaming, `2` = Listening, `3` = Watching     |
 | `Details` | string | Activity details (e.g. song title, editor file)                     |
 | `State`   | string | Activity state (e.g. artist name, workspace)                        |
+| `URL`     | string | Stream URL (present for streaming activities, type `1`)             |
 | `SyncID`  | string | Activity sync ID (e.g. Spotify track ID)                            |
 
 Example response:
@@ -194,11 +209,12 @@ Example response:
     "ClientStatus": { "desktop": "online" },
     "Activities": [
         {
-            "Name": "Spotify",
-            "Type": 2,
-            "Details": "Example Song",
-            "State": "Example Artist",
-            "SyncID": "4cOdK2wGLETKBDO"
+            "Name": "YouTube",
+            "Type": 1,
+            "Details": "Example Stream",
+            "State": "",
+            "URL": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "SyncID": ""
         }
     ]
 }
