@@ -97,7 +97,7 @@ Current Discord presence status.
 
 ### `GET /badge/music/{discord_user_id}`
 
-Track the user is currently listening to. Auto-detects supported music services (currently Spotify).
+Track the user is currently listening to. Auto-detects supported music services (Spotify, TIDAL).
 
 | Query        | Default        | Description                                         |
 | ------------ | -------------- | --------------------------------------------------- |
