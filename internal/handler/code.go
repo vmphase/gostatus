@@ -37,8 +37,12 @@ var editors = []editor{
 		color:  badge.ColorVSCode,
 		logo:   editorVSCode,
 		message: func(a *gateway.Activity) string {
-			if a.Details == "" {
+			if a.Details == "" || a.State == "" {
 				return ""
+			}
+			if file, ok := strings.CutPrefix(a.State, "Working on "); ok {
+				file = strings.TrimSpace(strings.SplitN(file, "|", 2)[0])
+				return a.Details + "working on " + file
 			}
 			file := strings.TrimPrefix(a.Details, "Editing ")
 			ws := strings.ReplaceAll(strings.ReplaceAll(a.State, "Workspace: ", ""), " (Workspace)", "")
