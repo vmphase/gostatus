@@ -184,37 +184,37 @@ Raw presence data as JSON. CORS-enabled. Returns the full cached Discord presenc
 
 Response object:
 
-| Field          | Type             | Description                                         |
-| -------------- | ---------------- | --------------------------------------------------- |
-| `Status`       | string           | `online`, `idle`, `dnd` or `offline`                |
-| `ClientStatus` | object           | Device-based status, e.g. `{ "desktop": "online" }` |
-| `Activities`   | array of objects | Currently active activities (see below)             |
+| Field           | Type             | Description                                         |
+| --------------- | ---------------- | --------------------------------------------------- |
+| `status`        | string           | `online`, `idle`, `dnd` or `offline`                |
+| `client_status` | object           | Device-based status, e.g. `{ "desktop": "online" }` |
+| `activities`    | array of objects | Currently active activities (see below)             |
 
 Activity object:
 
 | Field     | Type   | Description                                                         |
 | --------- | ------ | ------------------------------------------------------------------- |
-| `Name`    | string | Activity name, e.g. `Spotify`, `Visual Studio Code` or a game title |
-| `Type`    | number | `0` = Playing, `1` = Streaming, `2` = Listening, `3` = Watching     |
-| `Details` | string | Activity details (e.g. song title, editor file)                     |
-| `State`   | string | Activity state (e.g. artist name, workspace)                        |
-| `URL`     | string | Stream URL (present for streaming activities, type `1`)             |
-| `SyncID`  | string | Activity sync ID (e.g. Spotify track ID)                            |
+| `name`    | string | Activity name, e.g. `Spotify`, `Visual Studio Code` or a game title |
+| `type`    | number | `0` = Playing, `1` = Streaming, `2` = Listening, `3` = Watching     |
+| `details` | string | Activity details (e.g. song title, editor file)                     |
+| `state`   | string | Activity state (e.g. artist name, workspace)                        |
+| `url`     | string | Stream URL (present for streaming activities, type `1`)             |
+| `sync_id` | string | Activity sync ID (e.g. Spotify track ID)                            |
 
 Example response:
 
 ```json
 {
-    "Status": "online",
-    "ClientStatus": { "desktop": "online" },
-    "Activities": [
+    "status": "online",
+    "client_status": { "desktop": "online" },
+    "activities": [
         {
-            "Name": "YouTube",
-            "Type": 1,
-            "Details": "Example Stream",
-            "State": "",
-            "URL": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-            "SyncID": ""
+            "name": "YouTube",
+            "type": 1,
+            "details": "Example Stream",
+            "state": "",
+            "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+            "sync_id": ""
         }
     ]
 }
@@ -223,5 +223,5 @@ Example response:
 If the user has no cached presence (e.g. no shared server with the bot), a fallback response is returned:
 
 ```json
-{ "Activities": [], "ClientStatus": {}, "Status": "offline" }
+{ "activities": [], "client_status": {}, "status": "offline" }
 ```

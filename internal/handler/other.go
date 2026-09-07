@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"gostatus/internal/badge"
-	"gostatus/internal/gateway"
+	"gostatus/internal/store"
 )
 
 // Status renders the user's presence status.
@@ -39,7 +39,7 @@ func (h *Handler) Playing(w http.ResponseWriter, r *http.Request) {
 			editorNames[i] = ed.name
 		}
 
-		acts := FindAllActivities(p, gateway.ActivityTypePlaying, editorNames...)
+		acts := FindAllActivities(p, store.ActivityTypePlaying, editorNames...)
 		if len(acts) > 0 {
 			names := make([]string, len(acts))
 			for i, a := range acts {
@@ -63,7 +63,7 @@ func (h *Handler) CrunchyRoll(w http.ResponseWriter, r *http.Request) {
 	message := qp(r, "fallback", "nothing")
 
 	if p, ok := h.store.Get(h.id(r, "/badge/crunchyroll/")); ok {
-		if a := FindActivity(p, gateway.ActivityTypeWatching, "Crunchyroll"); a != nil && a.Details != "" {
+		if a := FindActivity(p, store.ActivityTypeWatching, "Crunchyroll"); a != nil && a.Details != "" {
 			message = fmt.Sprintf("%s – %s", a.Details, a.State)
 		}
 	}

@@ -165,7 +165,7 @@ func dispatch(event string, d json.RawMessage, s *store.Store) {
 				s.Set(pr.User.ID, store.Presence{
 					Status:       pr.Status,
 					ClientStatus: pr.ClientStatus,
-					Activities:   toStoreActivities(pr.Activities),
+					Activities:   pr.Activities,
 				})
 			}
 		}
@@ -181,25 +181,10 @@ func dispatch(event string, d json.RawMessage, s *store.Store) {
 			s.Set(pu.User.ID, store.Presence{
 				Status:       pu.Status,
 				ClientStatus: pu.ClientStatus,
-				Activities:   toStoreActivities(pu.Activities),
+				Activities:   pu.Activities,
 			})
 		}
 	}
-}
-
-func toStoreActivities(in []Activity) []store.Activity {
-	out := make([]store.Activity, len(in))
-	for i, a := range in {
-		out[i] = store.Activity{
-			Name:    a.Name,
-			Type:    a.Type,
-			Details: a.Details,
-			State:   a.State,
-			URL:     a.URL,
-			SyncID:  a.SyncID,
-		}
-	}
-	return out
 }
 
 func seqJSON(seq *int) json.RawMessage {

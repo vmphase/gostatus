@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"gostatus/internal/badge"
-	"gostatus/internal/gateway"
+	"gostatus/internal/store"
 )
 
 const (
@@ -26,7 +26,7 @@ type editor struct {
 	logo string
 	// builds the badge text from a matched activity
 	// "" when the activity lacks the required fields
-	message func(a *gateway.Activity) string
+	message func(a *store.Activity) string
 }
 
 var editors = []editor{
@@ -36,7 +36,7 @@ var editors = []editor{
 		label:  editorVSCode,
 		color:  badge.ColorVSCode,
 		logo:   editorVSCode,
-		message: func(a *gateway.Activity) string {
+		message: func(a *store.Activity) string {
 			if a.Details == "" || a.State == "" {
 				return ""
 			}
@@ -58,7 +58,7 @@ var editors = []editor{
 		label:  editorZed,
 		color:  badge.ColorZed,
 		logo:   editorZed,
-		message: func(a *gateway.Activity) string {
+		message: func(a *store.Activity) string {
 			if a.Details == "" {
 				return ""
 			}
@@ -76,7 +76,7 @@ var editors = []editor{
 		label:  "visual studio",
 		color:  badge.ColorVisualStudio,
 		logo:   "visualstudio",
-		message: func(a *gateway.Activity) string {
+		message: func(a *store.Activity) string {
 			if a.Details == "" {
 				return ""
 			}
@@ -132,7 +132,7 @@ func (h *Handler) Code(w http.ResponseWriter, r *http.Request) {
 	var matches []match
 
 	for _, ed := range editors {
-		a := FindActivity(p, gateway.ActivityTypePlaying, ed.name)
+		a := FindActivity(p, store.ActivityTypePlaying, ed.name)
 		if a == nil {
 			continue
 		}

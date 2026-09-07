@@ -1,13 +1,9 @@
 package gateway
 
-import "encoding/json"
+import (
+	"encoding/json"
 
-// Discord activity type constants.
-const (
-	ActivityTypePlaying   = iota // Playing a game
-	ActivityTypeStreaming        // Streaming
-	ActivityTypeListening        // Listening to music
-	ActivityTypeWatching         // Watching media
+	"gostatus/internal/store"
 )
 
 // Payload is a gateway event frame.
@@ -23,22 +19,12 @@ type PresenceUpdate struct {
 	User         *UserMin          `json:"user,omitempty"`
 	Status       string            `json:"status"`
 	ClientStatus map[string]string `json:"client_status"`
-	Activities   []Activity        `json:"activities"`
+	Activities   []store.Activity  `json:"activities"`
 }
 
 // UserMin is the minimal user payload sent with presence updates.
 type UserMin struct {
 	ID string `json:"id"`
-}
-
-// Activity is a Discord activity as reported by the gateway.
-type Activity struct {
-	Name    string `json:"name"`
-	Type    int    `json:"type"`
-	Details string `json:"details"`
-	State   string `json:"state"`
-	URL     string `json:"url"`
-	SyncID  string `json:"sync_id"`
 }
 
 type guildCreate struct {

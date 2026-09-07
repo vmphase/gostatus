@@ -5,21 +5,29 @@ import (
 	"time"
 )
 
+// Discord activity type constants.
+const (
+	ActivityTypePlaying   = iota // Playing a game
+	ActivityTypeStreaming        // Streaming
+	ActivityTypeListening        // Listening to music
+	ActivityTypeWatching         // Watching media
+)
+
 // Activity represents a single Discord activity in the cache.
 type Activity struct {
-	Name    string
-	Type    int
-	Details string
-	State   string
-	URL     string
-	SyncID  string
+	Name    string `json:"name"`
+	Type    int    `json:"type"`
+	Details string `json:"details"`
+	State   string `json:"state"`
+	URL     string `json:"url"`
+	SyncID  string `json:"sync_id"`
 }
 
 // Presence is a cached Discord user presence.
 type Presence struct {
-	Status       string
-	ClientStatus map[string]string
-	Activities   []Activity
+	Status       string            `json:"status"`
+	ClientStatus map[string]string `json:"client_status"`
+	Activities   []Activity        `json:"activities"`
 }
 
 type entry struct {

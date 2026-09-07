@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"gostatus/internal/badge"
-	"gostatus/internal/gateway"
+	"gostatus/internal/store"
 )
 
 // Streaming renders the user's current STREAMING activity (activity type 1),
@@ -16,7 +16,7 @@ func (h *Handler) Streaming(w http.ResponseWriter, r *http.Request) {
 	message := qp(r, "fallback", "nothing")
 
 	if p, ok := h.store.Get(h.id(r, "/badge/streaming/")); ok {
-		if a := FindActivity(p, gateway.ActivityTypeStreaming, ""); a != nil {
+		if a := FindActivity(p, store.ActivityTypeStreaming, ""); a != nil {
 			title := strings.TrimSpace(a.Details)
 			if title == "" {
 				title = strings.TrimSpace(a.State)

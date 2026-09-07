@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"gostatus/internal/badge"
-	"gostatus/internal/gateway"
+	"gostatus/internal/store"
 )
 
 type musicProvider struct {
@@ -19,7 +19,7 @@ type musicProvider struct {
 	logo string
 	// builds the badge text from a matched activity
 	// "" when the activity lacks the required fields
-	message func(a *gateway.Activity) string
+	message func(a *store.Activity) string
 }
 
 var musicProviders = []musicProvider{
@@ -28,7 +28,7 @@ var musicProviders = []musicProvider{
 		label: "listening to",
 		color: badge.ColorSpotify,
 		logo:  "spotify",
-		message: func(a *gateway.Activity) string {
+		message: func(a *store.Activity) string {
 			if a.Details == "" || a.State == "" {
 				return ""
 			}
@@ -40,7 +40,7 @@ var musicProviders = []musicProvider{
 		label: "listening to",
 		color: badge.ColorTIDAL,
 		logo:  "tidal",
-		message: func(a *gateway.Activity) string {
+		message: func(a *store.Activity) string {
 			if a.Details == "" || a.State == "" {
 				return ""
 			}
@@ -76,7 +76,7 @@ func (h *Handler) Music(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for _, provider := range musicProviders {
-		a := FindActivity(pres, gateway.ActivityTypeListening, provider.name)
+		a := FindActivity(pres, store.ActivityTypeListening, provider.name)
 		if a == nil {
 			continue
 		}
