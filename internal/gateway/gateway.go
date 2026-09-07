@@ -62,6 +62,8 @@ func run(token string, s *store.Store) error {
 	if err != nil {
 		return err
 	}
+	connected.Store(true)
+	defer connected.Store(false)
 	defer func() {
 		if err := conn.Close(); err != nil {
 			log.Printf("Gateway close error: %v", err)

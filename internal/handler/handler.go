@@ -27,6 +27,7 @@ func (h *Handler) Register(mux *http.ServeMux) {
 	mux.HandleFunc("/badge/code/", h.Code)
 	mux.HandleFunc("/badge/music/", h.Music)
 	mux.HandleFunc("/presence/", h.Presence)
+	mux.HandleFunc("/healthz", h.Healthz)
 }
 
 func (h *Handler) id(r *http.Request, prefix string) string {

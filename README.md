@@ -81,6 +81,12 @@ PORT=9090 docker compose -f .devcontainer/compose.yaml up --build -d
 
 ## Endpoints
 
+### `GET /healthz`
+
+Liveness probe for the server and Discord gateway connection. Returns `200` with `{"status":"ok"}` while the gateway is connected, or `503` with `{"status":"gateway disconnected"}` while it is not.
+
+---
+
 ### `GET /badge/status/{discord_user_id}`
 
 Current Discord presence status.
