@@ -28,7 +28,7 @@ func main() {
 		os.Exit(0)
 	}
 
-	s := store.New()
+	s := store.New(cfg.PresenceTTL)
 	go gateway.Connect(cfg.Token, s)
 
 	mux := http.NewServeMux()

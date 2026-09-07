@@ -2,6 +2,7 @@ package config
 
 import (
 	"log"
+	"time"
 
 	"github.com/caarlos0/env/v11"
 	"github.com/joho/godotenv"
@@ -9,9 +10,10 @@ import (
 
 // Config holds application configuration from environment variables.
 type Config struct {
-	Token       string `env:"TOKEN,required"`
-	Port        string `env:"PORT" envDefault:"8080"`
-	Healthcheck bool   `env:"HEALTHCHECK" envDefault:"false"`
+	Token       string        `env:"TOKEN,required"`
+	Port        string        `env:"PORT" envDefault:"8080"`
+	Healthcheck bool          `env:"HEALTHCHECK" envDefault:"false"`
+	PresenceTTL time.Duration `env:"PRESENCE_TTL" envDefault:"24h"`
 }
 
 // Load reads the environment and returns the parsed config.

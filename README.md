@@ -41,10 +41,13 @@ go run ./cmd/gostatus
 
 Configuration is read from the environment (via `.env` if present). Available variables:
 
-| Variable | Required | Default | Description                           |
-| -------- | -------- | ------- | ------------------------------------- |
-| `TOKEN`  | yes      | —       | Discord bot token from the Dev Portal |
-| `PORT`   | no       | `8080`  | Port the HTTP server listens on       |
+| Variable       | Required | Default | Description                                                             |
+| -------------- | -------- | ------- | ----------------------------------------------------------------------- |
+| `TOKEN`        | yes      | —       | Discord bot token from the Dev Portal                                   |
+| `PORT`         | no       | `8080`  | Port the HTTP server listens on                                         |
+| `PRESENCE_TTL` | no       | `24h`   | How long cached presences are kept before expiry (`0` disables cleanup) |
+
+Cached presences for users who stop being seen (e.g. left all shared servers) are automatically removed after `PRESENCE_TTL`.
 
 ### Docker
 
